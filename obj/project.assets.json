@@ -4848,11 +4848,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jialuli/Desktop/FDU/CSCI6844/Gym_Management_System/Gym_Management_System/GymManagement.csproj",
+      "projectUniqueName": "/Users/jialuli/Desktop/Gym_Management_System/GymManagement.csproj",
       "projectName": "GymManagement",
-      "projectPath": "/Users/jialuli/Desktop/FDU/CSCI6844/Gym_Management_System/Gym_Management_System/GymManagement.csproj",
+      "projectPath": "/Users/jialuli/Desktop/Gym_Management_System/GymManagement.csproj",
       "packagesPath": "/Users/jialuli/.nuget/packages/",
-      "outputPath": "/Users/jialuli/Desktop/FDU/CSCI6844/Gym_Management_System/Gym_Management_System/obj/",
+      "outputPath": "/Users/jialuli/Desktop/Gym_Management_System/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/jialuli/.nuget/NuGet/NuGet.Config"

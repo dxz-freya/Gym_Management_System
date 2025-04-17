@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9IHCvYQXWnQ=",
+  "dgSpecHash": "vVGiNWPrKsg=",
   "success": true,
-  "projectFilePath": "/Users/jialuli/Desktop/FDU/CSCI6844/Gym_Management_System/Gym_Management_System/GymManagement.csproj",
+  "projectFilePath": "/Users/jialuli/Desktop/Gym_Management_System/GymManagement.csproj",
   "expectedPackageFiles": [
     "/Users/jialuli/.nuget/packages/entityframework/6.4.4/entityframework.6.4.4.nupkg.sha512",
     "/Users/jialuli/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
