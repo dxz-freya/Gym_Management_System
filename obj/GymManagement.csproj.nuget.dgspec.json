@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/jialuli/Desktop/Gym_Management_System/GymManagement.csproj": {}
+    "/Users/xinxin/Documents/canada/FDU/Fourth Semester/6844-ProgrammingForTheInternet/Programs/Gym_Management_System/GymManagement.csproj": {}
   },
   "projects": {
-    "/Users/jialuli/Desktop/Gym_Management_System/GymManagement.csproj": {
+    "/Users/xinxin/Documents/canada/FDU/Fourth Semester/6844-ProgrammingForTheInternet/Programs/Gym_Management_System/GymManagement.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jialuli/Desktop/Gym_Management_System/GymManagement.csproj",
+        "projectUniqueName": "/Users/xinxin/Documents/canada/FDU/Fourth Semester/6844-ProgrammingForTheInternet/Programs/Gym_Management_System/GymManagement.csproj",
         "projectName": "GymManagement",
-        "projectPath": "/Users/jialuli/Desktop/Gym_Management_System/GymManagement.csproj",
-        "packagesPath": "/Users/jialuli/.nuget/packages/",
-        "outputPath": "/Users/jialuli/Desktop/Gym_Management_System/obj/",
+        "projectPath": "/Users/xinxin/Documents/canada/FDU/Fourth Semester/6844-ProgrammingForTheInternet/Programs/Gym_Management_System/GymManagement.csproj",
+        "packagesPath": "/Users/xinxin/.nuget/packages/",
+        "outputPath": "/Users/xinxin/Documents/canada/FDU/Fourth Semester/6844-ProgrammingForTheInternet/Programs/Gym_Management_System/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/jialuli/.nuget/NuGet/NuGet.Config"
+          "/Users/xinxin/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -100,7 +99,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.405/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
