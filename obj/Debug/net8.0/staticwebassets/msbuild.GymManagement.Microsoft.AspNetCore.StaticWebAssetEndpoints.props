@@ -1,0 +1,16 @@
+﻿<Project>
+  <ItemGroup>
+    <StaticWebAssetEndpoint Include="_content/GymManagement/GymManagement.bundle.scp.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\GymManagement.gl8mnjcew6.bundle.scp.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-BLgb7AnhS6JRSgYXo73M3BVkeUqBIOsk10vhGi/TR94="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"910"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022BLgb7AnhS6JRSgYXo73M3BVkeUqBIOsk10vhGi/TR94=\u0022"},{"Name":"Last-Modified","Value":"Thu, 17 Apr 2025 21:54:27 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/GymManagement/GymManagement.gl8mnjcew6.bundle.scp.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\GymManagement.gl8mnjcew6.bundle.scp.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"gl8mnjcew6"},{"Name":"integrity","Value":"sha256-BLgb7AnhS6JRSgYXo73M3BVkeUqBIOsk10vhGi/TR94="},{"Name":"label","Value":"_content/GymManagement/GymManagement.bundle.scp.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"910"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022BLgb7AnhS6JRSgYXo73M3BVkeUqBIOsk10vhGi/TR94=\u0022"},{"Name":"Last-Modified","Value":"Thu, 17 Apr 2025 21:54:27 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+  </ItemGroup>
+</Project>

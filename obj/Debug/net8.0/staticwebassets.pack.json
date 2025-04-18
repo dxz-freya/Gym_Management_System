@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/jialuli/Desktop/Gym_Management_System/obj/Debug/net8.0/scopedcss/projectbundle/GymManagement.bundle.scp.css",
+      "PackagePath": "staticwebassets/GymManagement.gl8mnjcew6.bundle.scp.css"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.GymManagement.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.GymManagement.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.GymManagement.props",
+      "PackagePath": "build\\GymManagement.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.GymManagement.props",
+      "PackagePath": "buildMultiTargeting\\GymManagement.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.GymManagement.props",
+      "PackagePath": "buildTransitive\\GymManagement.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
