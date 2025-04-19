@@ -1,0 +1,55 @@
+@model GymManagement.ViewModels.WalletRechargeViewModel
+@{
+    ViewData["Title"] = "Recharge Wallet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/img/breadcrumb-bg.jpg")" style="background-image: url('@Url.Content("~/img/breadcrumb-bg.jpg")');">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb-text">
+                    <h2>Recharge Wallet</h2>
+                    <div class="bt-option">
+                        <a asp-controller="Home" asp-action="Index">Home</a>
+                        <span>Recharge</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="services-section spad">
+    <div class="container">
+        @if (TempData["Toast"] != null)
+        {
+            <div class="alert alert-success text-center font-weight-bold">@TempData["Toast"]</div>
+        }
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card bg-dark text-light shadow-lg p-4">
+                    <h3 class="text-warning text-center mb-4">Current Wallet Balance: <span class="text-success">$@Model.CurrentBalance</span></h3>
+
+                    <form asp-action="Recharge" method="post">
+                        <div class="form-group">
+                            <label for="Amount">Enter Amount</label>
+                            <input type="number" step="0.01" min="1" asp-for="Amount" class="form-control" placeholder="e.g. 50.00" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="PaymentMethod">Select Payment Method</label>
+                            <select asp-for="PaymentMethod" class="form-control" required>
+                                <option value="">-- Select --</option>
+                                <option>Credit Card</option>
+                                <option>Cash</option>
+                                <option>Online</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-warning btn-block font-weight-bold mt-3">Recharge Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

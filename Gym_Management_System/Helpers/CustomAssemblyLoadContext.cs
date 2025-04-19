@@ -1,0 +1,27 @@
+using System;
+using System.IO;
+using System.Runtime.Loader; // 👈 关键
+using System.Reflection;
+
+
+
+namespace GymManagement.Helpers
+{
+    public class CustomAssemblyLoadContext : AssemblyLoadContext
+    {
+        public IntPtr LoadUnmanagedLibrary(string absolutePath)
+        {
+            return LoadUnmanagedDll(absolutePath);
+        }
+
+        protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
+        {
+            return LoadUnmanagedDllFromPath(unmanagedDllName);
+        }
+
+        protected override Assembly? Load(AssemblyName assemblyName)
+        {
+            return null!;
+        }
+    }
+}
