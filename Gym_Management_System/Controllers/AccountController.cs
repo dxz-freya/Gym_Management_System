@@ -42,60 +42,7 @@ namespace GymManagement.Controllers
     [HttpGet]
     public IActionResult Register() => View();
 
-    // [HttpPost]
-    // [ValidateAntiForgeryToken]
-    // public async Task<IActionResult> Register(RegisterViewModel model)
-    // {
-    //   if (ModelState.IsValid)
-    //   {
-    //     var existingUserByUsername = await _userManager.FindByNameAsync(model.Username);
-    //     if (existingUserByUsername != null)
-    //     {
-    //       ModelState.AddModelError("Username", "This username is already taken.");
-    //       return View(model);
-    //     }
-
-    //     var existingUserByEmail = await _userManager.FindByEmailAsync(model.Email);
-    //     if (existingUserByEmail != null)
-    //     {
-    //       ModelState.AddModelError("Email", "This email is already registered.");
-    //       return View(model);
-    //     }
-
-    //     var user = new User
-    //     {
-    //       UserName = model.Username,
-    //       Email = model.Email,
-    //       Name = model.Name,
-    //       JoinDate = DateTime.UtcNow,
-    //       DOB = model.DOB
-    //     };
-
-    //     var result = await _userManager.CreateAsync(user, model.Password);
-    //     if (result.Succeeded)
-    //     {
-    //       await _userManager.AddToRoleAsync(user, "Customer");
-    //       user.RoleNames = await _userManager.GetRolesAsync(user);
-    //       await _signInManager.SignInAsync(user, isPersistent: false);
-    //       return RedirectToAction("Dashboard", "Customer");
-    //     }
-
-    //     foreach (var error in result.Errors)
-    //     {
-    //       if (error.Code.Contains("Password"))
-    //         ModelState.AddModelError("Password", error.Description);
-    //       else if (error.Code.Contains("Email"))
-    //         ModelState.AddModelError("Email", error.Description);
-    //       else if (error.Code.Contains("UserName"))
-    //         ModelState.AddModelError("Username", error.Description);
-    //       else
-    //         ModelState.AddModelError(string.Empty, error.Description);
-    //     }
-    //   }
-
-    //   return View(model);
-    // }
-     [HttpPost]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
@@ -337,7 +284,7 @@ public async Task<IActionResult> ToggleAvailability(bool isAvailable)
     receptionist.IsAvailable = isAvailable;
     await _userManager.UpdateAsync(receptionist);
 
-    // ✅ 刷新当前登录状态，才能立刻反映在右上角
+    // 刷新当前登录状态，才能立刻反映在右上角
     await _signInManager.RefreshSignInAsync(receptionist);
 
     TempData["Toast"] = $"Availability set to {(isAvailable ? "Available" : "Not Available")}";
@@ -465,13 +412,13 @@ public async Task<IActionResult> EditProfile(EditProfileViewModel model)
     user.Email = model.Email;
     user.DOB = model.DOB;
 
-    // ✅ 更新 Receptionist 字段
+    // 更新 Receptionist 字段
     if (roles.Contains("Receptionist") && user is Receptionist receptionist)
     {
         receptionist.Notes = model.Notes;
     }
 
-    // ✅ 更新 Trainer 字段
+    // 更新 Trainer 字段
     if (roles.Contains("Trainer") && user is Trainer trainer)
     {
         trainer.Specialization = model.Specialization;

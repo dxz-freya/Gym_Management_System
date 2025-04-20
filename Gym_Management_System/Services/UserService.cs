@@ -24,7 +24,7 @@ namespace GymManagement.Services
                 query = query.Where(u =>
                     u.UserName!.ToLower().Contains(search) ||
                     u.Email!.ToLower().Contains(search) ||
-                    u.Name!.ToLower().Contains(search));  // 👈 加上 Full Name
+                    u.Name!.ToLower().Contains(search));  // 加上 Full Name
             }
 
             return await query.ToListAsync();

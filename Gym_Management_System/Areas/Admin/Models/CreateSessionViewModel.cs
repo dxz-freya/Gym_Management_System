@@ -24,8 +24,8 @@ namespace GymManagement.Areas.Admin.Models
 
         public string BranchName { get; set; } = string.Empty;
 
-        public SessionCategory Category { get; set; }  // ✅ 新增
-        public List<SelectListItem> CategoryList { get; set; } = new();  // ✅ 新增
+        public SessionCategory Category { get; set; } 
+        public List<SelectListItem> CategoryList { get; set; } = new();
 
         public List<SelectListItem> GymClassList { get; set; } = new();
         public List<SelectListItem> TrainerList { get; set; } = new();

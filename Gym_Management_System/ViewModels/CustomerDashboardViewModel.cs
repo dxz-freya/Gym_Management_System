@@ -13,7 +13,7 @@ namespace GymManagement.ViewModels
         public string MembershipStatus { get; set; } = string.Empty;
         public string MembershipType { get; set; } = string.Empty;
         public DateTime SubscriptionDate { get; set; }
-        public DateTime? MembershipExpiry { get; set; }  // 🔹 加这个
+        public DateTime? MembershipExpiry { get; set; } 
 
         public string ProfileImageName { get; set; } = "default.png";
 
@@ -25,7 +25,7 @@ namespace GymManagement.ViewModels
         public int TotalPages { get; set; }
         public int CurrentPage { get; set; }
 
-        public decimal WalletBalance { get; set; } // 👈 加上这个
+        public decimal WalletBalance { get; set; }
 
     }
 }

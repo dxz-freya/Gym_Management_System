@@ -206,8 +206,8 @@ namespace GymManagement.Areas.Admin.Controllers
       {
         Id = user.Id,
         Username = user.UserName,
-        FullName = user.Name,       // ✅ updated
-        Contact = user.Email,       // ✅ updated
+        FullName = user.Name,
+        Contact = user.Email,
         SelectedRole = roles.FirstOrDefault(r => r != "Admin"),
         AvailableRoles = await roleManager.Roles
                               .Where(r => r.Name != "Admin")
@@ -340,7 +340,7 @@ namespace GymManagement.Areas.Admin.Controllers
         Roles = await roleManager.Roles.ToListAsync()
       };
 
-      return PartialView("_UserTableBody", model); // ✅ 只返回匹配项
+      return PartialView("_UserTableBody", model);
     }
   }
 }

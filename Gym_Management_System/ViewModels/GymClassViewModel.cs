@@ -12,10 +12,10 @@ namespace GymManagement.ViewModels
 
         public required string Description { get; set; }
 
-        // ✅ 显示图用：从 DB 读取的文件名
+        // 显示图用：从 DB 读取的文件名
         public string? ImageName { get; set; } = "class-default.jpg";
 
-        // ✅ 表单上传图用：用于接收上传文件
+        // 表单上传图用：用于接收上传文件
         public IFormFile? ImageFile { get; set; }
     }
 }

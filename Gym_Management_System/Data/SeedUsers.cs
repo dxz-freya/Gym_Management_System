@@ -30,7 +30,7 @@ namespace GymManagement.Data
                 return;
             }
 
-            // ✅ Admin
+            // Admin
             string adminEmail = "admin@gym.com";
             if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
@@ -47,7 +47,7 @@ namespace GymManagement.Data
                     await userManager.AddToRoleAsync(admin, "Admin");
             }
 
-            // ✅ Trainers
+            // Trainers
             var trainerNames = new[] {
                 "Emily Chen", "Jack Wang", "Sophia Liu", "Leo Zhang", "Olivia Huang",
                 "Daniel Guo", "Mia Sun", "Jason Lin", "Emma Yu", "Lucas Ma",
@@ -79,7 +79,7 @@ namespace GymManagement.Data
                 }
             }
 
-            // ✅ Customers
+            // Customers
             var customerNames = new[] {
                 "Amy Zhou", "Brian Li", "Chloe Wu", "David Xu", "Ella Feng",
                 "Frank Zhao", "Grace Huang", "Henry Yang", "Isla Chen", "Jake Luo",
@@ -169,7 +169,7 @@ namespace GymManagement.Data
             }
 
 
-            // ✅ Receptionists
+            // Receptionists
             var receptionistNames = new[] { "Sophie Desk", "Liam Front", "Emily Welcome", "Jay Counter", "Nina Greet" };
 
             for (int i = 0; i < 5; i++)

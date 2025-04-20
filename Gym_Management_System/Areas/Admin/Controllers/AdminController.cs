@@ -71,26 +71,26 @@ namespace GymManagement.Areas.Admin.Controllers
     {
       var vm = new CreateSessionViewModel
       {
-        // ✅ If a date is provided, default time is 09:00 AM that day; otherwise empty
+        // If a date is provided, default time is 09:00 AM that day; otherwise empty
         SessionDateTime = date.HasValue ? date.Value.Date.AddHours(9) : DateTime.MinValue,
 
-        // ✅ Dropdown: Gym class templates
+        // Dropdown: Gym class templates
         GymClassList = _dbContext.GymClasses
               .Select(c => new SelectListItem { Text = c.ClassName, Value = c.GymClassId.ToString() })
               .ToList(),
 
-        // ✅ Dropdown: Trainers
+        // Dropdown: Trainers
         TrainerList = _dbContext.Users
               .OfType<Trainer>()
               .Select(t => new SelectListItem { Text = t.Name, Value = t.Id })
               .ToList(),
 
-        // ✅ Dropdown: Rooms
+        // Dropdown: Rooms
         RoomList = _dbContext.Rooms
               .Select(r => new SelectListItem { Text = r.RoomName, Value = r.RoomId.ToString() })
               .ToList(),
 
-        // ✅ Dropdown: Session categories (e.g. Yoga, HIIT)
+        // Dropdown: Session categories (e.g. Yoga, HIIT)
         CategoryList = Enum.GetValues(typeof(SessionCategory))
               .Cast<SessionCategory>()
               .Select(c => new SelectListItem
@@ -99,7 +99,7 @@ namespace GymManagement.Areas.Admin.Controllers
                 Value = c.ToString()
               }).ToList(),
 
-        // ✅ Default branch label (readonly field)
+        // Default branch label (readonly field)
         BranchName = "N/A"
       };
 

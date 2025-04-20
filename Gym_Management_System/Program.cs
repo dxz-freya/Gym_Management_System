@@ -24,7 +24,7 @@ if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 
 
 
-// ✅ Register services
+// Register services
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
@@ -54,7 +54,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
     options.Cookie.IsEssential = true;
 
-    // ✅ 自动清除失效用户 Cookie
+    // 自动清除失效用户 Cookie
     options.Events.OnValidatePrincipal = async context =>
     {
         var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<User>>();
@@ -99,7 +99,7 @@ if (args.Length > 0 && args[0].ToLower() == "seeddata")
 }
 
 
-// ✅ Web app setup
+// Web app setup
 if (!app.Environment.IsDevelopment())
 {
   app.UseExceptionHandler("/Home/Error");
@@ -112,7 +112,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// ✅ Add static file access for profile uploads + disable cache
+// Add static file access for profile uploads + disable cache
 app.UseStaticFiles(new StaticFileOptions
 {
   FileProvider = new PhysicalFileProvider(
@@ -129,7 +129,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// ✅ Routes
+// Routes
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Admin}/{action=Dashboard}/{id?}");

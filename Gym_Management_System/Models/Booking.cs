@@ -20,24 +20,24 @@ namespace GymManagement.Models
     [Required]
     public BookingStatus Status { get; set; }
 
-    // 🔹 Foreign key to Customer (IdentityUser-based)
+    // Foreign key to Customer (IdentityUser-based)
     [Required]
     public string CustomerId { get; set; } = string.Empty;
 
     [ForeignKey("CustomerId")]
     public Customer Customer { get; set; } = null!;
 
-    // 🔹 Foreign key to Session
+    // Foreign key to Session
     [Required]
     public int SessionId { get; set; }
 
     [ForeignKey("SessionId")]
     public Session Session { get; set; } = null!;
 
-    // 🔹 Optional check-in time
+    // Optional check-in time
     public DateTime? CheckInTime { get; set; }
 
-    // 🔹 Optional foreign key to Receptionist
+    // Optional foreign key to Receptionist
     public string? ReceptionistId { get; set; }
 
     [ForeignKey("ReceptionistId")]

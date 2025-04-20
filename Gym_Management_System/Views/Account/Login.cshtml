@@ -31,7 +31,7 @@
     <label asp-for="RememberMe" class="form-check-label text-white">Remember Me</label>
   </div>
 
-  @* ✅ Server-side summary for any general login errors *@
+  @* Server-side summary for any general login errors *@
   @if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty] != null)
   {
     <div class="text-danger mb-3">

@@ -9,6 +9,6 @@ namespace GymManagement.Areas.Admin.Models
     {
         public IEnumerable<User> Users { get; set; } = null!;
         public IEnumerable<IdentityRole> Roles { get; set; } = null!;
-        public PagingInfo PagingInfo { get; set; } = new(); // ✅ 分页支持
+        public PagingInfo PagingInfo { get; set; } = new();
     }
 }

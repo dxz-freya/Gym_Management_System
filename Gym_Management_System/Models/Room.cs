@@ -21,7 +21,6 @@ namespace GymManagement.Models
 
     public GymBranch? GymBranch { get; set; }
 
-    // ✅ 新增这行
     public ICollection<Session> Sessions { get; set; } = new List<Session>();
   }
 }

@@ -94,7 +94,7 @@ public ReceptionistController(AppDbContext db, UserManager<User> userManager, Si
     }
 
 
-    // 🔹 Search Member Info by Receptionist's Branch
+    // Search Member Info by Receptionist's Branch
     public IActionResult SearchMembersByBranch()
     {
       var receptionist = GetCurrentReceptionist();
@@ -109,7 +109,7 @@ public ReceptionistController(AppDbContext db, UserManager<User> userManager, Si
 
 
 
-    // 🔹 Search Booking Info by Receptionist's Branch
+    // Search Booking Info by Receptionist's Branch
     public IActionResult GetBookingsByBranch()
     {
       var receptionist = GetCurrentReceptionist();
@@ -126,7 +126,7 @@ public ReceptionistController(AppDbContext db, UserManager<User> userManager, Si
       return View(bookings);
     }
 
-    // 🔹 Check In Member
+    // Check In Member
     [HttpPost]
     public IActionResult CheckInMember(int bookingId)
     {
@@ -153,7 +153,7 @@ public ReceptionistController(AppDbContext db, UserManager<User> userManager, Si
     }
 
 
-    // 🔹 Get Room Info
+    // Get Room Info
     public IActionResult GetRoomInfoByBranch()
     {
       var receptionist = GetCurrentReceptionist();
@@ -167,7 +167,7 @@ public ReceptionistController(AppDbContext db, UserManager<User> userManager, Si
       return View(rooms);
     }
 
-    // 🔹 Branch Session Calendar
+    // Branch Session Calendar
     public IActionResult GetBranchSchedule()
     {
       var receptionist = GetCurrentReceptionist();
@@ -194,7 +194,7 @@ public async Task<IActionResult> ManageBookings(string filter, string value, int
 
     var branchId = receptionist.BranchId;
 
-    // ✅ 限定只查当前 Receptionist 分店的 bookings
+    // 限定只查当前 Receptionist 分店的 bookings
     var bookings = _db.Bookings
         .Include(b => b.Customer)
         .Include(b => b.Session).ThenInclude(s => s.GymClass)
@@ -204,7 +204,7 @@ public async Task<IActionResult> ManageBookings(string filter, string value, int
         .OrderByDescending(b => b.Session.SessionDateTime)
         .ToList();
 
-    // ✅ 筛选过滤
+    // 筛选过滤
     switch (filter)
     {
         case "class":
@@ -223,7 +223,7 @@ public async Task<IActionResult> ManageBookings(string filter, string value, int
             break;
     }
 
-    // ✅ 限定当前分店的 Customer
+    // 限定当前分店的 Customer
     var customers = _db.Customers
         .Where(c => c.GymBranchId == branchId)
         .Select(c => new SelectListItem
@@ -232,7 +232,7 @@ public async Task<IActionResult> ManageBookings(string filter, string value, int
             Text = c.Name
         }).ToList();
 
-    // ✅ 限定当前分店的 Session
+    // 限定当前分店的 Session
     var sessions = _db.Sessions
         .Include(s => s.GymClass)
         .Include(s => s.Room)

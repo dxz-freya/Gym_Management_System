@@ -14,7 +14,7 @@ public class ClassScheduleController : Controller
     _dbContext = context;
   }
 
-  // 🔹 Display all available class sessions
+  // Display all available class sessions
   public IActionResult Index()
   {
     var sessions = _dbContext.Sessions
@@ -28,7 +28,7 @@ public class ClassScheduleController : Controller
     return View(sessions);
   }
 
-  // 🔹 Session details
+  // Session details
   public IActionResult SessionDetails(int sessionId)
   {
     var session = _dbContext.Sessions
@@ -47,7 +47,7 @@ public class ClassScheduleController : Controller
     return View(session);
   }
 
-  // 🔹 Book a session
+  // Book a session
   [Authorize(Roles = "Customer")]
   [HttpPost]
   public IActionResult BookSession(int sessionId)
@@ -95,7 +95,7 @@ public class ClassScheduleController : Controller
     return RedirectToAction("Index");
   }
 
-  // 🔹 Cancel a booking
+  // Cancel a booking
   [Authorize(Roles = "Customer")]
   [HttpPost]
   public IActionResult CancelBooking(int bookingId)

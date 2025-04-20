@@ -28,7 +28,7 @@ public class MemberController : Controller
       .FirstOrDefault(c => c.Id == userId);
   }
 
-  // 🔹 Member Dashboard
+  // Member Dashboard
   public IActionResult Dashboard()
   {
     var customer = GetCurrentCustomer();
@@ -36,7 +36,7 @@ public class MemberController : Controller
     return View(customer);
   }
 
-  // 🔹 Book a Gym Session
+  // Book a Gym Session
   [HttpPost]
   public IActionResult BookSession(int sessionId)
   {
@@ -67,7 +67,7 @@ public class MemberController : Controller
     return RedirectToAction("Dashboard");
   }
 
-  // 🔹 Cancel a Booking
+  // Cancel a Booking
   [HttpPost]
   public IActionResult CancelBooking(int bookingId)
   {
@@ -85,7 +85,7 @@ public class MemberController : Controller
     return RedirectToAction("Dashboard");
   }
 
-  // 🔹 Membership Status
+  // Membership Status
   public IActionResult MembershipStatus()
   {
     var customer = GetCurrentCustomer();
@@ -93,7 +93,7 @@ public class MemberController : Controller
     return View(customer);
   }
 
-  // 🔹 Workout History
+  // Workout History
   public IActionResult WorkoutHistory()
   {
     var customer = GetCurrentCustomer();
@@ -109,7 +109,7 @@ public class MemberController : Controller
     return View(history);
   }
 
-  // 🔹 View Profile
+  // View Profile
   public IActionResult Profile()
   {
     var customer = GetCurrentCustomer();
@@ -117,7 +117,7 @@ public class MemberController : Controller
     return View(customer);
   }
 
-  // 🔹 Edit Profile
+  // Edit Profile
   [HttpPost]
   public IActionResult EditProfile(Customer updatedCustomer)
   {

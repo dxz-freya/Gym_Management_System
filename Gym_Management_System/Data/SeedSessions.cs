@@ -1,4 +1,4 @@
-// ✅ 更新版 SeedSessions.cs：每个分店从昨天起排满两周（14 天），每天排 5 个 Session，时间在 8:00 到 20:00
+// 更新版 SeedSessions.cs：每个分店从昨天起排满两周（14 天），每天排 5 个 Session，时间在 8:00 到 20:00
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -15,7 +15,7 @@ public class GymBranchController : Controller
     _dbContext = dbContext;
   }
 
-  // ✅ 所有人都可以访问
+  // 所有人都可以访问
   [AllowAnonymous]
   public IActionResult Index()
   {
@@ -34,8 +34,6 @@ public class GymBranchController : Controller
     return View(branches);
   }
 
-  // ✅ 所有人都可以访问
-  // GymBranchController.cs
   [AllowAnonymous]
 
 

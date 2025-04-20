@@ -13,7 +13,7 @@ namespace GymManagement.Models
         public DateTime? MembershipExpiry { get; set; }
         public DateTime SubscriptionDate { get; set; }
 
-        public decimal WalletBalance { get; set; } = 0m; // 👈 用于余额显示与扣款
+        public decimal WalletBalance { get; set; } = 0m; // 用于余额显示与扣款
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();
