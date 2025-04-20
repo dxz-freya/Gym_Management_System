@@ -8,7 +8,8 @@
     var plans = new[] { MembershipType.Monthly, MembershipType.Quarterly, MembershipType.Yearly };
 }
 
-<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/img/breadcrumb-bg.jpg")" style="background-image: url('@Url.Content("~/img/breadcrumb-bg.jpg")');">
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/img/breadcrumb-bg.jpg")"
+         style="background-image: url('@Url.Content("~/img/breadcrumb-bg.jpg")');">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -24,79 +25,118 @@
     </div>
 </section>
 
-<section class="services-section spad">
+<section class="pricing-section spad">
     <div class="container">
         @if (TempData["Toast"] != null)
         {
-            <div class="alert alert-success text-center">@TempData["Toast"]</div>
+            <div class="alert alert-warning text-center font-weight-bold shadow-lg" style="font-size: 1.2rem;">
+                @TempData["Toast"]
+            </div>
         }
 
-        <div class="text-center mb-5">
-            <h2 class="text-warning font-weight-bold mb-3">@Model.Name</h2>
-
+        <!-- 🔹 Profile Info -->
+        <div class="section-title text-center">
+            <h2 class="text-warning font-weight-bold">@Model.Name</h2>
             <p>Membership Type: <strong>@Model.MembershipType</strong></p>
-
             <p>
                 Status:
                 <span class="badge badge-@(Model.MembershipStatus == "Active" ? "success" :
-                                           Model.MembershipStatus == "Expired" ? "danger" :
-                                           "secondary")">
+                                           Model.MembershipStatus == "Expired" ? "danger" : "secondary")">
                     @Model.MembershipStatus
                 </span>
             </p>
-
-            <p>
-                Expires On: <strong>@Model.ExpiryDate?.ToString("yyyy-MM-dd")</strong>
-            </p>
-
-            <p>
-                Remaining Days: <strong class="text-info">@Model.RemainingDays</strong>
-            </p>
+            <p>Expires On: <strong>@Model.ExpiryDate?.ToString("yyyy-MM-dd")</strong></p>
+            <p>Remaining Days: <strong class="text-info">@Model.RemainingDays</strong></p>
+            <h4 class="text-light mb-4">Wallet Balance: <strong class="text-warning">$@Model.WalletBalance</strong></h4>
+            <a href="@Url.Action("Recharge", "Customer")" class="btn btn-outline-warning font-weight-bold px-4 mb-4">Recharge Wallet</a>
         </div>
 
-        @if (Model.MembershipStatus == "Expired")
-        {
-            <div class="section-title text-center">
-                <span>Renew Your Membership</span>
-                <h2>Choose Your Pricing Plan</h2>
-            </div>
-            <div class="row justify-content-center">
-                @foreach (var plan in plans)
-                {
-                    var price = PricingPlans.GetPrice(plan);
-                    var label = PricingPlans.GetDisplayName(plan);
-                    var name = plan.ToString();
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="ps-item text-center bg-dark text-light p-4">
-                            <h3 class="text-warning">@name Plan</h3>
-                            <div class="pi-price my-3">
-                                <h2 class="text-orange">$@price</h2>
-                                <span>@label</span>
-                            </div>
-                            <ul class="list-unstyled text-light">
-                                <li>Free riding</li>
-                                <li>Unlimited equipments</li>
-                                <li>Personal trainer</li>
-                                <li>Weight losing classes</li>
-                                <li>Month to mouth</li>
-                                <li>No time restriction</li>
-                            </ul>
-                            <form asp-action="RenewMembership" method="post">
-                                <input type="hidden" name="plan" value="@plan" />
-                                <button type="submit" class="primary-btn pricing-btn mt-3">Renew Now</button>
-                            </form>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
+        <!-- 🔹 Plan Cards -->
+        <div class="section-title text-center">
+            <span>Renew Your Membership</span>
+            <h2>Choose Your Pricing Plan</h2>
+        </div>
+        <div class="row justify-content-center">
+            @foreach (var plan in plans)
+            {
+                var price = PricingPlans.GetPrice(plan);
+                var label = PricingPlans.GetDisplayName(plan);
+                var name = plan.ToString();
+                var canAfford = Model.WalletBalance >= price;
 
-        <h4 class="text-center mb-3 text-light">Payment History</h4>
+                string[] features;
+                switch (plan)
+                {
+                    case MembershipType.Monthly:
+                        features = new[] {
+                            "Access to all gym equipment",
+                            "Group fitness classes (limited slots)",
+                            "1 Personal trainer consultation",
+                            "Standard locker access",
+                            "No commitment, cancel anytime",
+                            "Open 6AM - 10PM daily"
+                        };
+                        break;
+                    case MembershipType.Quarterly:
+                        features = new[] {
+                            "Unlimited group class access",
+                            "2 Personal trainer sessions/month",
+                            "Premium locker + shower access",
+                            "Free gym bag + towel",
+                            "Priority booking for peak hours",
+                            "Valid for 3 months"
+                        };
+                        break;
+                    case MembershipType.Yearly:
+                        features = new[] {
+                            "All-inclusive VIP access",
+                            "Monthly body analysis & diet plan",
+                            "Unlimited personal trainer sessions",
+                            "Free exclusive merch package",
+                            "Priority access to new programs",
+                            "12-month full access & perks"
+                        };
+                        break;
+                    default:
+                        features = new[] { "No info available" };
+                        break;
+                }
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="ps-item text-center bg-dark text-light p-4 shadow-lg rounded">
+                        <h3 class="text-warning">@name Plan</h3>
+                        <div class="pi-price my-3">
+                            <h2 class="text-orange">$@price</h2>
+                            <span>@label</span>
+                        </div>
+                        <ul class="list-unstyled text-light mb-4">
+                            @foreach (var feature in features)
+                            {
+                                <li>@feature</li>
+                            }
+                        </ul>
+                        <form asp-action="RenewMembership" method="post">
+                            <input type="hidden" name="plan" value="@plan" />
+                            <button type="submit"
+                                    class="primary-btn pricing-btn mt-2"
+                                    @(canAfford ? "" : "disabled")
+                                    title="@(canAfford ? $"Deduct ${price} from wallet" : "Insufficient Balance")">
+                                @(canAfford ? "Renew Now" : "Not Enough 💸")
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- 🔹 Payment History -->
+        <h4 class="text-center mb-3 text-light mt-5">Payment History</h4>
         <table class="table table-bordered table-striped text-center bg-white">
             <thead class="thead-dark">
                 <tr>
                     <th>Amount</th>
                     <th>Payment Method</th>
+                    <th>Type</th>
                     <th>Date</th>
                 </tr>
             </thead>
@@ -106,6 +146,7 @@
                     <tr>
                         <td>$@p.Price</td>
                         <td>@p.PaymentMethod</td>
+                        <td>@p.Type</td>
                         <td>@p.PaymentDate.ToString("yyyy-MM-dd")</td>
                     </tr>
                 }

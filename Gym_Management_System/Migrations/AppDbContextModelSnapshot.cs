@@ -176,6 +176,9 @@ namespace GymManagement.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("PaymentId");
 
                     b.HasIndex("CustomerId");
@@ -688,6 +691,9 @@ namespace GymManagement.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("SubscriptionDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("WalletBalance")
                         .HasColumnType("TEXT");
 
                     b.HasIndex("GymBranchId");

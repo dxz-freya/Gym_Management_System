@@ -2,17 +2,26 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication;
-
+using GymManagement.Helpers;
 using GymManagement.Data;
 using GymManagement.Models;
 using GymManagement.Services;
 using Microsoft.Extensions.FileProviders;
-
-
+using DinkToPdf;
+using DinkToPdf.Contracts;
+var context = new CustomAssemblyLoadContext();
 var builder = WebApplication.CreateBuilder(args);
+
+var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "pdf", "libwkhtmltox.dll");
+context.LoadUnmanagedLibrary(wkhtmltoxPath);
+
+
+
 
 // ✅ Register services
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
   options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -64,6 +73,8 @@ builder.Services.AddAuthentication()
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+builder.Services.AddScoped<PdfService>();
 
 var app = builder.Build();
 

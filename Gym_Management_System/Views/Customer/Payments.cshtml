@@ -1,32 +1,130 @@
-<!-- Edit.cshtml in GymManagement/Views/Customer folder-->
-@model Customer
+@using GymManagement.Models
+@using GymManagement.Helpers
+@model GymManagement.ViewModels.Payments.PaymentsPageViewModel
 
-<div class="d-flex justify-content-center align-items-center">
-  <div class="login-container p-4 shadow rounded" style="width: 400px; background-color: #f8f9fa;">
-    <h2 class="text-center mb-4">Edit Customer</h2>
+@{
+    ViewData["Title"] = "Payments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <form asp-controller="Customer" asp-action="Edit" method="post">
-      <input type="hidden" asp-for="Id" />
+@section Styles {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+}
 
-      <div class="form-group mb-3 d-flex flex-column">
-        <label class="mb-1">Customer ID:</label>
-        <input class="form-control" value="@Model.Id" readonly />
-      </div>
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/img/breadcrumb-bg.jpg")" style="background-image: url('@Url.Content("~/img/breadcrumb-bg.jpg")');">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb-text">
+                    <h2>My Payments</h2>
+                    <div class="bt-option">
+                        <a asp-controller="Home" asp-action="Index">Home</a>
+                        <span>Payments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-      <div class="form-group mb-3 d-flex flex-column">
-        <label class="mb-1" asp-for="Name">Customer Name:</label>
-        <input asp-for="Name" class="form-control" required />
-      </div>
+<section class="pricing-section spad">
+    <div class="container">
 
-      <div class="form-group mb-3 d-flex flex-column">
-        <label class="mb-1" asp-for="Email">Email:</label>
-        <input asp-for="Email" class="form-control" type="email" required />
-      </div>
+        <div class="text-center mb-5">
+            <h3 class="text-warning">Wallet Balance: $@Model.WalletBalance</h3>
+            <a class="btn btn-outline-warning px-4 font-weight-bold" asp-action="Recharge">Recharge Wallet</a>
+        </div>
 
-      <div class="d-flex justify-content-center mt-4">
-        <button type="submit" class="btn custom-btn me-3">Save</button>
-        <button type="button" class="btn btn-secondary" onclick="window.history.back();">Cancel</button>
-      </div>
-    </form>
-  </div>
-</div>
+        <div class="row text-center mb-4">
+            <div class="col-md-6">
+                <canvas id="barChart" height="250"></canvas>
+            </div>
+            <div class="col-md-6">
+                <canvas id="pieChart" height="250"></canvas>
+            </div>
+        </div>
+
+        <form class="form-inline justify-content-center mb-4" method="get" asp-action="Payments">
+            <select name="type" class="form-control mx-2">
+                <option value="">All Types</option>
+                @foreach (var t in Enum.GetNames(typeof(PaymentType)))
+                {
+                    <option value="@t" selected="@(Model.FilterType == t)">@t</option>
+                }
+            </select>
+
+            <input type="date" name="from" class="form-control mx-2" value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+            <input type="date" name="to" class="form-control mx-2" value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+            <button type="submit" class="btn btn-warning mx-2">Filter</button>
+        </form>
+
+        <table class="table table-bordered table-striped text-center bg-white">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Invoice</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.Payments)
+                {
+                    <tr>
+                        <td>$@p.Price</td>
+                        <td>@p.PaymentMethod</td>
+                        <td>@p.Type</td>
+                        <td>@p.PaymentDate.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" href="@Url.Action("DownloadInvoice", "Customer", new { id = p.PaymentId })">
+                                Download
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="mt-5">
+            <h4 class="text-center text-light mb-3">💡 Wallet Usage Instructions</h4>
+            <ul class="text-light">
+                <li>You can recharge your wallet using the "Recharge" button above.</li>
+                <li>Membership purchases will be deducted from wallet if sufficient balance exists.</li>
+                <li>Invoices are downloadable for each transaction.</li>
+                <li>If your balance is insufficient during renewal, you’ll receive a toast message.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const barCtx = document.getElementById('barChart');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.ChartLabels)),
+                datasets: [{
+                    label: 'Spending ($)',
+                    data: @Html.Raw(Json.Serialize(Model.ChartValues)),
+                    backgroundColor: 'rgba(255, 193, 7, 0.7)',
+                    borderColor: 'rgba(255, 193, 7, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        const pieCtx = document.getElementById('pieChart');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.ChartTypes)),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(Model.ChartTypeTotals)),
+                    backgroundColor: ['#ffc107', '#28a745', '#17a2b8', '#dc3545']
+                }]
+            }
+        });
+    </script>
+}

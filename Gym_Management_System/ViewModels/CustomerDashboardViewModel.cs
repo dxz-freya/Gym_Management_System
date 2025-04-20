@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using GymManagement.ViewModels.Payments;
+
+
+
 
 namespace GymManagement.ViewModels
 {
@@ -20,5 +24,8 @@ namespace GymManagement.ViewModels
 
         public int TotalPages { get; set; }
         public int CurrentPage { get; set; }
+
+        public decimal WalletBalance { get; set; } // 👈 加上这个
+
     }
 }

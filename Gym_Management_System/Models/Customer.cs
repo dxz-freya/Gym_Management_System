@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace GymManagement.Models
@@ -12,24 +10,16 @@ namespace GymManagement.Models
         [Required]
         public MembershipStatus MembershipStatus { get; set; }
 
-        [Required]
+        public DateTime? MembershipExpiry { get; set; }
         public DateTime SubscriptionDate { get; set; }
 
-        public DateTime? MembershipExpiry { get; set; }
+        public decimal WalletBalance { get; set; } = 0m; // 👈 用于余额显示与扣款
 
-        [Required]
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-
-        [Required]
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
         public int GymBranchId { get; set; }
         public GymBranch? GymBranch { get; set; }
-
-        public Customer()
-        {
-            SubscriptionDate = DateTime.UtcNow;
-        }
     }
 
     public enum MembershipType

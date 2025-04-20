@@ -1,0 +1,8 @@
+@model GymManagement.Models.Payment
+
+<h2>Invoice</h2>
+<hr />
+<p><strong>Customer:</strong> @Model.Customer.Name</p>
+<p><strong>Amount:</strong> $@Model.Price</p>
+<p><strong>Payment Method:</strong> @Model.PaymentMethod</p>
+<p><strong>Date:</strong> @Model.PaymentDate.ToShortDateString()</p>

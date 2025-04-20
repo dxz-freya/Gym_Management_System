@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using GymManagement.Models;
-using GymManagement.Data;
-using GymManagement.Helpers;
-using GymManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Security.Claims;
+using GymManagement.Models;
+using GymManagement.Data;
+using GymManagement.Helpers;
+using GymManagement.Services;
+using GymManagement.ViewModels;
+using GymManagement.ViewModels.Payments;
 
 namespace GymManagement.Controllers
 {
@@ -16,16 +17,18 @@ namespace GymManagement.Controllers
     {
         private readonly AppDbContext _dbContext;
         private readonly UserManager<User> _userManager;
+        private readonly PdfService _pdfService;
 
-        public CustomerController(AppDbContext dbContext, UserManager<User> userManager)
+        public CustomerController(AppDbContext dbContext, UserManager<User> userManager, PdfService pdfService)
         {
             _dbContext = dbContext;
             _userManager = userManager;
+            _pdfService = pdfService;
         }
 
         private async Task<Customer> GetCurrentCustomerAsync()
         {
-            var userId = _userManager.GetUserId(User); 
+            var userId = _userManager.GetUserId(User);
             var customer = await _dbContext.Customers
                 .Include(c => c.Bookings)
                 .Include(c => c.Payments)
@@ -35,120 +38,80 @@ namespace GymManagement.Controllers
         }
 
         public async Task<IActionResult> Dashboard(string? category, string? trainer, string? status, int page = 1)
-{
-    var customer = await GetCurrentCustomerAsync();
-    int pageSize = 10;
-    var now = DateTime.Now;
-
-    // 查询 Booking 数据
-    var bookingsQuery = _dbContext.Bookings
-        .Include(b => b.Session).ThenInclude(s => s.GymClass)
-        .Include(b => b.Session).ThenInclude(s => s.Trainer)
-        .Include(b => b.Session).ThenInclude(s => s.Room)
-        .Where(b => b.CustomerId == customer.Id)
-        .AsQueryable();
-
-    // 筛选逻辑
-    if (!string.IsNullOrEmpty(category))
-        bookingsQuery = bookingsQuery.Where(b => b.Session.Category.ToString() == category);
-
-    if (!string.IsNullOrEmpty(trainer))
-        bookingsQuery = bookingsQuery.Where(b => b.Session.Trainer.Name == trainer);
-
-    if (!string.IsNullOrEmpty(status) && Enum.TryParse<BookingStatus>(status, out var parsedStatus))
-        bookingsQuery = bookingsQuery.Where(b => b.Status == parsedStatus);
-
-    // 投影为 ViewModel
-    var allBookingVMs = await bookingsQuery
-        .OrderByDescending(b => b.Session.SessionDateTime)
-        .Select(b => new BookingViewModel
         {
-            BookingId = b.BookingId,
-            ClassName = b.Session.GymClass.ClassName,
-            SessionDate = b.Session.SessionDateTime,
-            Status = b.Status.ToString(),
-            TrainerName = b.Session.Trainer.Name,
-            RoomName = b.Session.Room.RoomName,
-            Category = b.Session.Category.ToString()
-        })
-        .ToListAsync();
+            var customer = await GetCurrentCustomerAsync();
+            int pageSize = 10;
+            var now = DateTime.Now;
 
-    // 分组
-    var upcomingAll = allBookingVMs.Where(b => b.SessionDate > now).ToList();
-    var past = allBookingVMs.Where(b => b.SessionDate <= now).ToList();
+            var bookingsQuery = _dbContext.Bookings
+                .Include(b => b.Session).ThenInclude(s => s.GymClass)
+                .Include(b => b.Session).ThenInclude(s => s.Trainer)
+                .Include(b => b.Session).ThenInclude(s => s.Room)
+                .Where(b => b.CustomerId == customer.Id)
+                .AsQueryable();
 
-    // 分页
-    var totalPages = (int)Math.Ceiling(upcomingAll.Count / (double)pageSize);
-    var upcomingPaged = upcomingAll
-        .Skip((page - 1) * pageSize)
-        .Take(pageSize)
-        .ToList();
+            if (!string.IsNullOrEmpty(category))
+                bookingsQuery = bookingsQuery.Where(b => b.Session.Category.ToString() == category);
 
-    // 构建 ViewModel
-    var dashboardVM = new CustomerDashboardViewModel
-    {
-        Name = customer.Name,
-        MembershipType = customer.MembershipType.ToString(),
-        MembershipStatus = customer.MembershipStatus.ToString(),
-        SubscriptionDate = customer.SubscriptionDate,
-        MembershipExpiry = customer.MembershipExpiry,
-        ProfileImageName = customer.ProfileImageName ?? "default.png",
-        Payments = customer.Payments.Select(p => new PaymentViewModel
-        {
-            Price = p.Price,
-            PaymentMethod = p.PaymentMethod,
-            PaymentDate = p.PaymentDate
-        }).ToList(),
-        UpcomingBookings = upcomingPaged,
-        PastBookings = past,
-        CurrentPage = page,
-        TotalPages = totalPages
-    };
+            if (!string.IsNullOrEmpty(trainer))
+                bookingsQuery = bookingsQuery.Where(b => b.Session.Trainer.Name == trainer);
 
-    // 下拉选项
-    ViewBag.CategoryOptions = Enum.GetNames(typeof(SessionCategory)).ToList();
-    ViewBag.TrainerOptions = await _dbContext.Trainers.Select(t => t.Name).Distinct().ToListAsync();
-    ViewBag.StatusOptions = Enum.GetNames(typeof(BookingStatus)).ToList();
-    ViewBag.SelectedCategory = category;
-    ViewBag.SelectedTrainer = trainer;
-    ViewBag.SelectedStatus = status;
+            if (!string.IsNullOrEmpty(status) && Enum.TryParse<BookingStatus>(status, out var parsedStatus))
+                bookingsQuery = bookingsQuery.Where(b => b.Status == parsedStatus);
 
-    return View(dashboardVM);
-}
+            var allBookingVMs = await bookingsQuery
+                .OrderByDescending(b => b.Session.SessionDateTime)
+                .Select(b => new BookingViewModel
+                {
+                    BookingId = b.BookingId,
+                    ClassName = b.Session.GymClass.ClassName,
+                    SessionDate = b.Session.SessionDateTime,
+                    Status = b.Status.ToString(),
+                    TrainerName = b.Session.Trainer.Name,
+                    RoomName = b.Session.Room.RoomName,
+                    Category = b.Session.Category.ToString()
+                })
+                .ToListAsync();
 
+            var upcoming = allBookingVMs.Where(b => b.SessionDate > now).ToList();
+            var past = allBookingVMs.Where(b => b.SessionDate <= now).ToList();
 
-        // 2. Profile Info
-        public async Task<IActionResult> Profile()
-        {
-            var customer = await GetCurrentCustomerAsync(); 
-            return View(customer);  
+            var vm = new CustomerDashboardViewModel
+            {
+                Name = customer.Name,
+                MembershipType = customer.MembershipType.ToString(),
+                MembershipStatus = customer.MembershipStatus.ToString(),
+                SubscriptionDate = customer.SubscriptionDate,
+                MembershipExpiry = customer.MembershipExpiry,
+                ProfileImageName = customer.ProfileImageName ?? "default.png",
+                WalletBalance = customer.WalletBalance,
+                Payments = customer.Payments.Select(p => new PaymentViewModel
+                {
+                    Price = p.Price,
+                    PaymentMethod = p.PaymentMethod,
+                    PaymentDate = p.PaymentDate,
+                    Type = p.Type.ToString()
+                }).ToList(),
+                UpcomingBookings = upcoming.Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+                PastBookings = past,
+                CurrentPage = page,
+                TotalPages = (int)Math.Ceiling(upcoming.Count / (double)pageSize)
+            };
+
+            ViewBag.CategoryOptions = Enum.GetNames(typeof(SessionCategory)).ToList();
+            ViewBag.TrainerOptions = await _dbContext.Trainers.Select(t => t.Name).Distinct().ToListAsync();
+            ViewBag.StatusOptions = Enum.GetNames(typeof(BookingStatus)).ToList();
+            ViewBag.SelectedCategory = category;
+            ViewBag.SelectedTrainer = trainer;
+            ViewBag.SelectedStatus = status;
+
+            return View(vm);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Profile(Customer updatedCustomer)
-        {
-            var customer = await GetCurrentCustomerAsync();  
-
-            if (!ModelState.IsValid)
-                return View(updatedCustomer);  
-
-            // 更新 Customer 信息
-            customer.Name = updatedCustomer.Name;
-            customer.PhoneNumber = updatedCustomer.PhoneNumber;
-
-            _dbContext.Update(customer);  
-            await _dbContext.SaveChangesAsync();  
-
-            TempData["Success"] = "Profile updated!"; 
-            return RedirectToAction("Dashboard"); 
-        }
-
-        // 3. Membership Status
         [HttpGet]
         public async Task<IActionResult> Membership()
         {
             var customer = await GetCurrentCustomerAsync();
-
             var vm = new MembershipViewModel
             {
                 Name = customer.Name,
@@ -156,13 +119,15 @@ namespace GymManagement.Controllers
                 MembershipStatus = customer.MembershipStatus.ToString(),
                 ExpiryDate = customer.MembershipExpiry,
                 RemainingDays = customer.MembershipExpiry.HasValue
-                    ? (customer.MembershipExpiry.Value.Date - DateTime.UtcNow.Date).Days
-                    : 0,
+                    ? (customer.MembershipExpiry.Value.Date - DateTime.UtcNow.Date).Days : 0,
+                WalletBalance = customer.WalletBalance,
                 Payments = customer.Payments.Select(p => new PaymentViewModel
                 {
                     Price = p.Price,
                     PaymentMethod = p.PaymentMethod,
-                    PaymentDate = p.PaymentDate
+                    PaymentDate = p.PaymentDate,
+                    Type = p.Type.ToString(),
+                    PaymentId = p.PaymentId
                 }).ToList()
             };
 
@@ -174,44 +139,178 @@ namespace GymManagement.Controllers
         {
             var customer = await GetCurrentCustomerAsync();
 
+            if (!Enum.TryParse<MembershipType>(plan, out var selectedType))
+            {
+                TempData["Toast"] = "Invalid membership plan.";
+                return RedirectToAction("Membership");
+            }
+
+            decimal price = PricingPlans.GetPrice(selectedType);
+
+            if (customer.WalletBalance < price)
+            {
+                TempData["Toast"] = $"❌ Insufficient balance! You need ${price} but only have ${customer.WalletBalance}. Please recharge.";
+                return RedirectToAction("Membership");
+            }
+
+            customer.WalletBalance -= price;
+            customer.MembershipType = selectedType;
             customer.MembershipStatus = MembershipStatus.Active;
             customer.SubscriptionDate = DateTime.UtcNow;
 
-            // 设置类型和时间
-            MembershipType selectedType = MembershipType.Monthly;
-            switch (plan)
+            if (customer.MembershipExpiry.HasValue && customer.MembershipExpiry.Value > DateTime.UtcNow)
             {
-                case "Quarterly":
-                    selectedType = MembershipType.Quarterly;
-                    customer.MembershipExpiry = DateTime.UtcNow.AddMonths(3);
-                    break;
-                case "Yearly":
-                    selectedType = MembershipType.Yearly;
-                    customer.MembershipExpiry = DateTime.UtcNow.AddYears(1);
-                    break;
-                default:
-                    customer.MembershipExpiry = DateTime.UtcNow.AddMonths(1);
-                    break;
+                customer.MembershipExpiry = selectedType switch
+                {
+                    MembershipType.Monthly => customer.MembershipExpiry.Value.AddMonths(1),
+                    MembershipType.Quarterly => customer.MembershipExpiry.Value.AddMonths(3),
+                    MembershipType.Yearly => customer.MembershipExpiry.Value.AddYears(1),
+                    _ => customer.MembershipExpiry
+                };
+            }
+            else
+            {
+                customer.MembershipExpiry = selectedType switch
+                {
+                    MembershipType.Monthly => DateTime.UtcNow.AddMonths(1),
+                    MembershipType.Quarterly => DateTime.UtcNow.AddMonths(3),
+                    MembershipType.Yearly => DateTime.UtcNow.AddYears(1),
+                    _ => DateTime.UtcNow
+                };
             }
 
-            customer.MembershipType = selectedType;
-
-            // ⬇ 添加 payment 记录
-            var payment = new Payment
+            _dbContext.Payments.Add(new Payment
             {
                 CustomerId = customer.Id,
-                Price = PricingPlans.GetPrice(selectedType),
-                PaymentMethod = "Online",
-                PaymentDate = DateTime.UtcNow
-            };
+                Price = price,
+                PaymentMethod = "Wallet",
+                PaymentDate = DateTime.UtcNow,
+                Type = PaymentType.Membership
+            });
 
-            _dbContext.Payments.Add(payment);
             _dbContext.Update(customer);
             await _dbContext.SaveChangesAsync();
 
-            TempData["Toast"] = $"Membership renewed as {plan} plan!";
+            TempData["Toast"] = $"✅ Membership renewed as {selectedType}! ${price} has been deducted from your wallet.";
             return RedirectToAction("Membership");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Recharge()
+        {
+            var customer = await GetCurrentCustomerAsync();
+            return View(new WalletRechargeViewModel { CurrentBalance = customer.WalletBalance });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Recharge(WalletRechargeViewModel vm)
+        {
+            var customer = await GetCurrentCustomerAsync();
+            if (!ModelState.IsValid)
+            {
+                vm.CurrentBalance = customer.WalletBalance;
+                return View(vm);
+            }
+
+            customer.WalletBalance += vm.Amount;
+
+            _dbContext.Payments.Add(new Payment
+            {
+                CustomerId = customer.Id,
+                Price = vm.Amount,
+                PaymentMethod = vm.PaymentMethod,
+                PaymentDate = DateTime.UtcNow,
+                Type = PaymentType.Recharge
+            });
+
+            _dbContext.Update(customer);
+            await _dbContext.SaveChangesAsync();
+
+            TempData["Toast"] = $"Successfully recharged ${vm.Amount}";
+            return RedirectToAction("Membership");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Payments(string? type, DateTime? from, DateTime? to)
+        {
+            var customer = await GetCurrentCustomerAsync();
+            var payments = customer.Payments.OrderByDescending(p => p.PaymentDate).ToList();
+
+            if (!string.IsNullOrEmpty(type) && Enum.TryParse<PaymentType>(type, out var parsedType))
+                payments = payments.Where(p => p.Type == parsedType).ToList();
+
+            if (from.HasValue)
+                payments = payments.Where(p => p.PaymentDate >= from.Value).ToList();
+
+            if (to.HasValue)
+                payments = payments.Where(p => p.PaymentDate <= to.Value).ToList();
+
+            var chartData = payments
+                .GroupBy(p => p.PaymentDate.ToString("yyyy-MM"))
+                .Select(g => new ChartBarViewModel
+                {
+                    Month = g.Key,
+                    Total = g.Sum(p => p.Price)
+                }).ToList();
+
+            var vm = new PaymentsPageViewModel
+            {
+                WalletBalance = customer.WalletBalance,
+                Payments = payments.Select(p => new PaymentViewModel
+                {
+                    Price = p.Price,
+                    PaymentMethod = p.PaymentMethod,
+                    Type = p.Type.ToString(),
+                    PaymentDate = p.PaymentDate,
+                    PaymentId = p.PaymentId
+                }).ToList(),
+                ChartData = chartData,
+                FilterType = type,
+                FromDate = from,
+                ToDate = to
+            };
+
+            return View(vm);
+        }
+
+        [HttpGet]
+public async Task<IActionResult> DownloadInvoice(int id)
+{
+    var payment = await _dbContext.Payments
+        .Include(p => p.Customer)
+        .FirstOrDefaultAsync(p => p.PaymentId == id);
+
+    if (payment == null)
+        return NotFound();
+
+    var html = $@"
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; padding: 40px; }}
+                h2 {{ color: #ffc107; }}
+                table {{ width: 100%; border-collapse: collapse; margin-top: 20px; }}
+                td {{ padding: 8px; }}
+                .bold {{ font-weight: bold; }}
+            </style>
+        </head>
+        <body>
+            <h2>Gym Invoice</h2>
+            <p><span class='bold'>Invoice ID:</span> {payment.PaymentId}</p>
+            <p><span class='bold'>Customer:</span> {payment.Customer.Name}</p>
+            <p><span class='bold'>Email:</span> {payment.Customer.Email}</p>
+            <p><span class='bold'>Date:</span> {payment.PaymentDate:yyyy-MM-dd}</p>
+            <p><span class='bold'>Payment Method:</span> {payment.PaymentMethod}</p>
+            <p><span class='bold'>Type:</span> {payment.Type}</p>
+            <h3>Total: ${payment.Price:F2}</h3>
+        </body>
+        </html>";
+
+    var pdf = _pdfService.GeneratePdf(html);
+    return File(pdf, "application/pdf", $"Invoice_{payment.PaymentId}.pdf");
+}
+
+
 
 
 

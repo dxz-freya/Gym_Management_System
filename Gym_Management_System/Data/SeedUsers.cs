@@ -1,8 +1,10 @@
 
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using GymManagement.Models;
+using GymManagement.Helpers;
 
 namespace GymManagement.Data
 {
@@ -92,7 +94,7 @@ namespace GymManagement.Data
             };
 
             var membershipTypes = new[] { MembershipType.Monthly, MembershipType.Quarterly, MembershipType.Yearly };
-            var membershipStatuses = new[] { MembershipStatus.Active, MembershipStatus.Expired, MembershipStatus.Suspended };
+            var statuses = new[] { MembershipStatus.Active, MembershipStatus.Expired, MembershipStatus.Suspended };
             var paymentMethods = new[] { "Credit Card", "Cash", "Debit", "Online" };
             var rnd = new Random();
 
@@ -101,11 +103,10 @@ namespace GymManagement.Data
                 var email = $"{customerNames[i].ToLower().Replace(" ", "")}@cust.com";
                 if (await userManager.FindByEmailAsync(email) == null)
                 {
-                    // 🎯 类型 + 状态
                     var type = membershipTypes[i % membershipTypes.Length];
-                    var status = membershipStatuses[i % membershipStatuses.Length];
+                    var status = statuses[i % statuses.Length];
+                    var wallet = rnd.Next(20, 200); // 💰 随机钱包金额
 
-                    // 🕒 有效期逻辑
                     DateTime? expiry = status switch
                     {
                         MembershipStatus.Active => type switch
@@ -115,8 +116,7 @@ namespace GymManagement.Data
                             MembershipType.Yearly => DateTime.UtcNow.AddYears(1),
                             _ => null
                         },
-                        MembershipStatus.Expired => DateTime.UtcNow.AddDays(-rnd.Next(5, 30)), // 已过期日期
-                        MembershipStatus.Suspended => null, // 暂停状态不设定过期
+                        MembershipStatus.Expired => DateTime.UtcNow.AddDays(-rnd.Next(5, 30)),
                         _ => null
                     };
 
@@ -126,12 +126,13 @@ namespace GymManagement.Data
                         Email = email,
                         Name = customerNames[i],
                         JoinDate = DateTime.UtcNow,
-                        DOB = new DateTime(1990 + (i % 15), 5, (i % 28) + 1),
+                        DOB = new DateTime(1990 + i, 6, 15),
                         MembershipType = type,
                         MembershipStatus = status,
                         MembershipExpiry = expiry,
+                        WalletBalance = wallet,
                         SubscriptionDate = DateTime.UtcNow,
-                        GymBranchId = branches[i % 5].BranchId
+                        GymBranchId = branches[i % branches.Count].BranchId
                     };
 
                     var result = await userManager.CreateAsync(user, "Customer@123");
@@ -139,31 +140,33 @@ namespace GymManagement.Data
                     {
                         await userManager.AddToRoleAsync(user, "Customer");
 
-                        // 💳 只有 Active 和 Expired 才生成付款记录
+                        // ➕ 添加付款记录（仅 Active/Expired 有会员购买）
                         if (status == MembershipStatus.Active || status == MembershipStatus.Expired)
                         {
-                            decimal price = type switch
-                            {
-                                MembershipType.Monthly => 59.99m,
-                                MembershipType.Quarterly => 149.99m,
-                                MembershipType.Yearly => 499.99m,
-                                _ => 0m
-                            };
-
                             var payment = new Payment
                             {
                                 CustomerId = user.Id,
-                                Price = price,
+                                Price = PricingPlans.GetPrice(type),
                                 PaymentMethod = paymentMethods[rnd.Next(paymentMethods.Length)],
-                                PaymentDate = status == MembershipStatus.Expired ? DateTime.UtcNow.AddMonths(-1) : DateTime.UtcNow
+                                PaymentDate = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                                Type = PaymentType.Membership
                             };
-
                             context.Payments.Add(payment);
                         }
+
+                        // ➕ 添加充值记录（随机一个 Recharge）
+                        var recharge = new Payment
+                        {
+                            CustomerId = user.Id,
+                            Price = user.WalletBalance,
+                            PaymentMethod = "Initial Credit",
+                            PaymentDate = DateTime.UtcNow.AddDays(-rnd.Next(5, 15)),
+                            Type = PaymentType.Recharge
+                        };
+                        context.Payments.Add(recharge);
                     }
                 }
             }
-
 
 
             // ✅ Receptionists

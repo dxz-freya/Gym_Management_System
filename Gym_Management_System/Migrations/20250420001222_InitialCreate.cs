@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GymManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class InitWithWallet : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -75,8 +75,8 @@ namespace GymManagement.Migrations
                     Discriminator = table.Column<string>(type: "TEXT", maxLength: 13, nullable: false),
                     MembershipType = table.Column<int>(type: "INTEGER", nullable: true),
                     MembershipStatus = table.Column<int>(type: "INTEGER", nullable: true),
-                    SubscriptionDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     MembershipExpiry = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SubscriptionDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     WalletBalance = table.Column<decimal>(type: "TEXT", nullable: true),
                     GymBranchId = table.Column<int>(type: "INTEGER", nullable: true),
                     Responsibilities = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
