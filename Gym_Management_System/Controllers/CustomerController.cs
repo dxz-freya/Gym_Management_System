@@ -42,6 +42,10 @@ namespace GymManagement.Controllers
             var customer = await GetCurrentCustomerAsync();
             int pageSize = 10;
             var now = DateTime.Now;
+            if (customer == null)
+            {
+                return NotFound("Customer not found.");
+            }
 
             var bookingsQuery = _dbContext.Bookings
                 .Include(b => b.Session).ThenInclude(s => s.GymClass)
