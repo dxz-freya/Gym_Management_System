@@ -3,6 +3,37 @@
 @{
     ViewData["Title"] = "Gym Branches";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var plans = new[] { "Monthly", "Quarterly", "Yearly" };
+    var pricing = new Dictionary<string, (decimal, string[], string)>
+    {
+        ["Monthly"] = (59.99m, new[] {
+            "Access to all gym equipment",
+            "Group fitness classes (limited slots)",
+            "1 Personal trainer consultation",
+            "Standard locker access",
+            "No commitment, cancel anytime",
+            "Open 6AM - 10PM daily"
+        }, "MONTHLY (+1 MONTH)"),
+
+        ["Quarterly"] = (149.99m, new[] {
+            "Unlimited group class access",
+            "2 Personal trainer sessions/month",
+            "Premium locker + shower access",
+            "Free gym bag + towel",
+            "Priority booking for peak hours",
+            "Valid for 3 months"
+        }, "QUARTERLY (+3 MONTHS)"),
+
+        ["Yearly"] = (499.99m, new[] {
+            "All-inclusive VIP access",
+            "Monthly body analysis & diet plan",
+            "Unlimited personal trainer sessions",
+            "Free exclusive merch package",
+            "Priority access to new programs",
+            "12-month full access & perks"
+        }, "YEARLY (+12 MONTHS)")
+    };
 }
 
 <!-- Breadcrumb Section Begin -->
@@ -38,10 +69,12 @@
             @foreach (var branch in Model)
             {
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="ss-pic">
-                        <img src="@branch.ImageUrl" alt="@branch.BranchName" class="img-fluid"
-                            style="height: 240px; object-fit: cover;" />
-                    </div>
+                    <a asp-controller="GymBranch" asp-action="Details" asp-route-id="@branch.BranchId">
+                        <div class="ss-pic">
+                            <img src="@branch.ImageUrl" alt="@branch.BranchName" class="img-fluid"
+                                 style="height: 240px; object-fit: cover;" />
+                        </div>
+                    </a>
                     <div class="ss-text second-row">
                         <h4>@branch.BranchName</h4>
                         <p><i class="fa fa-map-marker text-warning"></i> @branch.Address</p>
@@ -52,7 +85,7 @@
                             <li><i class="fa fa-building text-warning"></i> Rooms: @branch.RoomCount</li>
                         </ul>
                         <a class="text-warning" asp-controller="GymBranch" asp-action="Details"
-                            asp-route-id="@branch.BranchId">Explore</a>
+                           asp-route-id="@branch.BranchId">Explore</a>
                     </div>
                 </div>
             }
@@ -91,63 +124,35 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-8">
-                <div class="ps-item">
-                    <h3>Class drop-in</h3>
-                    <div class="pi-price">
-                        <h2>$ 39.0</h2>
-                        <span>SINGLE CLASS</span>
+            @foreach (var planName in plans)
+            {
+                var (price, features, label) = pricing[planName];
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="ps-item text-center bg-dark text-light p-4 shadow-lg rounded">
+                        <h3 class="text-warning">@planName Plan</h3>
+                        <div class="pi-price my-3">
+                            <h2 class="text-orange">$@price</h2>
+                            <span>@label</span>
+                        </div>
+                        <ul class="list-unstyled text-light mb-4">
+                            @foreach (var f in features) {
+                                <li>@f</li>
+                            }
+                        </ul>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <form asp-action="RenewMembership" asp-controller="Customer" method="post">
+                                <input type="hidden" name="plan" value="@planName" />
+                                <button type="submit" class="primary-btn pricing-btn">Enroll Now</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="primary-btn pricing-btn">Login to Enroll</a>
+                        }
                     </div>
-                    <ul>
-                        <li>Free riding</li>
-                        <li>Unlimited equipments</li>
-                        <li>Personal trainer</li>
-                        <li>Weight losing classes</li>
-                        <li>Month to mouth</li>
-                        <li>No time restriction</li>
-                    </ul>
-                    <a href="#" class="primary-btn pricing-btn">Enroll now</a>
-                    <a href="#" class="thumb-icon"><i class="fa fa-picture-o"></i></a>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-8">
-                <div class="ps-item">
-                    <h3>12 Month unlimited</h3>
-                    <div class="pi-price">
-                        <h2>$ 99.0</h2>
-                        <span>SINGLE CLASS</span>
-                    </div>
-                    <ul>
-                        <li>Free riding</li>
-                        <li>Unlimited equipments</li>
-                        <li>Personal trainer</li>
-                        <li>Weight losing classes</li>
-                        <li>Month to mouth</li>
-                        <li>No time restriction</li>
-                    </ul>
-                    <a href="#" class="primary-btn pricing-btn">Enroll now</a>
-                    <a href="#" class="thumb-icon"><i class="fa fa-picture-o"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-8">
-                <div class="ps-item">
-                    <h3>6 Month unlimited</h3>
-                    <div class="pi-price">
-                        <h2>$ 59.0</h2>
-                        <span>SINGLE CLASS</span>
-                    </div>
-                    <ul>
-                        <li>Free riding</li>
-                        <li>Unlimited equipments</li>
-                        <li>Personal trainer</li>
-                        <li>Weight losing classes</li>
-                        <li>Month to mouth</li>
-                        <li>No time restriction</li>
-                    </ul>
-                    <a href="#" class="primary-btn pricing-btn">Enroll now</a>
-                    <a href="#" class="thumb-icon"><i class="fa fa-picture-o"></i></a>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </section>

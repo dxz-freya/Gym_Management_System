@@ -44,5 +44,17 @@ namespace GymManagement.Models
     [Display(Name = "Confirm Password")]
     [Compare("Password", ErrorMessage = "Passwords do not match.")]
     public string? ConfirmPassword { get; set; }
+
+    // For Customer
+    public MembershipStatus? MembershipStatus { get; set; }
+    public DateTime? SubscriptionDate { get; set; }
+
+    // For Receptionist
+    public string? Notes { get; set; }
+    public bool? IsAvailable { get; set; }
+
+    // For Trainer
+    public string? Bio { get; set; }
+    public string? Specialization { get; set; }
   }
 }

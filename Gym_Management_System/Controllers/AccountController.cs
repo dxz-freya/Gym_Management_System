@@ -327,97 +327,169 @@ namespace GymManagement.Controllers
 
       return View(model);
     }
+  [HttpPost]
+  [Authorize(Roles = "Receptionist")]
+public async Task<IActionResult> ToggleAvailability(bool isAvailable)
+{
+    var user = await _userManager.GetUserAsync(User);
+    if (user is not Receptionist receptionist) return Unauthorized();
+
+    receptionist.IsAvailable = isAvailable;
+    await _userManager.UpdateAsync(receptionist);
+
+    // ✅ 刷新当前登录状态，才能立刻反映在右上角
+    await _signInManager.RefreshSignInAsync(receptionist);
+
+    TempData["Toast"] = $"Availability set to {(isAvailable ? "Available" : "Not Available")}";
+    return RedirectToAction("ViewProfile");
+}
+
+
+
+
 
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> ViewProfile()
     {
-      var user = await _userManager.GetUserAsync(User);
-      if (user == null) return NotFound();
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return NotFound();
 
-      var roles = await _userManager.GetRolesAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
 
-      var vm = new EditProfileViewModel
-      {
-        UserName = user.UserName ?? "",
-        Name = user.Name,
-        Email = user.Email ?? string.Empty,
-        DOB = user.DOB,
-        ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
-    ? "/uploads/profile/default.png"
-    : "/uploads/profile/" + user.ProfileImageName,
+        var vm = new EditProfileViewModel
+        {
+            UserName = user.UserName ?? "",
+            Name = user.Name,
+            Email = user.Email ?? string.Empty,
+            DOB = user.DOB,
+            ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
+                ? "/uploads/profile/default.png"
+                : "/uploads/profile/" + user.ProfileImageName,
+            RoleNames = roles
+        };
 
-        RoleNames = roles
-      };
+        // 👇 根据角色填充额外字段
+        if (roles.Contains("Customer") && user is Customer customer)
+        {
+            vm.MembershipStatus = customer.MembershipStatus;
+            vm.SubscriptionDate = customer.SubscriptionDate;
+        }
 
-      return View(vm);
+        if (roles.Contains("Receptionist") && user is Receptionist receptionist)
+        {
+            vm.Notes = receptionist.Notes;
+            vm.IsAvailable = receptionist.IsAvailable;
+        }
+
+        if (roles.Contains("Trainer") && user is Trainer trainer)
+        {
+            vm.Bio = trainer.Bio;
+            vm.Specialization = trainer.Specialization;
+        }
+
+        return View(vm);
     }
 
-    [Authorize]
-    [HttpGet]
-    public async Task<IActionResult> EditProfile()
-    {
-      var user = await _userManager.GetUserAsync(User);
-      if (user == null) return NotFound();
 
-      var model = new EditProfileViewModel
-      {
+
+    [Authorize]
+[HttpGet]
+public async Task<IActionResult> EditProfile()
+{
+    var user = await _userManager.GetUserAsync(User);
+    if (user == null) return NotFound();
+
+    var roles = await _userManager.GetRolesAsync(user);
+
+    var model = new EditProfileViewModel
+    {
         Name = user.Name,
         Email = user.Email,
         DOB = user.DOB,
         ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
-              ? "/uploads/profile/default.png"
-              : "/uploads/profile/" + user.ProfileImageName
-      };
+            ? "/uploads/profile/default.png"
+            : "/uploads/profile/" + user.ProfileImageName,
+        RoleNames = roles
+    };
 
-      return View(model);
+    if (roles.Contains("Receptionist") && user is Receptionist receptionist)
+    {
+        model.Notes = receptionist.Notes;
+        model.IsAvailable = receptionist.IsAvailable;
     }
 
-    [Authorize]
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditProfile(EditProfileViewModel model)
+    if (roles.Contains("Trainer") && user is Trainer trainer)
     {
-      var user = await _userManager.GetUserAsync(User);
-      if (user == null) return NotFound();
+        model.Specialization = trainer.Specialization;
+        model.Bio = trainer.Bio;
+    }
 
-      if (!ModelState.IsValid)
-      {
+    return View(model);
+}
+
+
+    [Authorize]
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> EditProfile(EditProfileViewModel model)
+{
+    var user = await _userManager.GetUserAsync(User);
+    if (user == null) return NotFound();
+
+    var roles = await _userManager.GetRolesAsync(user);
+    model.RoleNames = roles;
+
+    if (!ModelState.IsValid)
+    {
         model.ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
             ? "/uploads/profile/default.png"
             : "/uploads/profile/" + user.ProfileImageName;
         return View(model);
-      }
+    }
 
-      if (!string.Equals(model.Email, user.Email, StringComparison.OrdinalIgnoreCase))
-      {
+    if (!string.Equals(model.Email, user.Email, StringComparison.OrdinalIgnoreCase))
+    {
         var exists = await _userManager.FindByEmailAsync(model.Email);
         if (exists != null && exists.Id != user.Id)
         {
-          ModelState.AddModelError("Email", "This email is already taken.");
-          model.ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
-              ? "/uploads/profile/default.png"
-              : "/uploads/profile/" + user.ProfileImageName;
-          return View(model);
+            ModelState.AddModelError("Email", "This email is already taken.");
+            model.ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
+                ? "/uploads/profile/default.png"
+                : "/uploads/profile/" + user.ProfileImageName;
+            return View(model);
         }
-      }
+    }
 
-      user.Name = model.Name;
-      user.Email = model.Email;
-      user.DOB = model.DOB;
+    user.Name = model.Name;
+    user.Email = model.Email;
+    user.DOB = model.DOB;
 
-      if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
-      {
+    // ✅ 更新 Receptionist 字段
+    if (roles.Contains("Receptionist") && user is Receptionist receptionist)
+    {
+        receptionist.Notes = model.Notes;
+    }
+
+    // ✅ 更新 Trainer 字段
+    if (roles.Contains("Trainer") && user is Trainer trainer)
+    {
+        trainer.Specialization = model.Specialization;
+        trainer.Bio = model.Bio;
+    }
+
+    if (model.ProfileImageFile != null && model.ProfileImageFile.Length > 0)
+    {
         var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/bmp", "image/webp" };
         var contentType = model.ProfileImageFile.ContentType.ToLower();
 
         if (!allowedTypes.Contains(contentType))
         {
-          ModelState.AddModelError("", "Only image files (JPG, PNG, GIF, BMP, WEBP) are allowed.");
-          model.ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
-              ? "/uploads/profile/default.png"
-              : "/uploads/profile/" + user.ProfileImageName;
-          return View(model);
+            ModelState.AddModelError("", "Only image files (JPG, PNG, GIF, BMP, WEBP) are allowed.");
+            model.ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
+                ? "/uploads/profile/default.png"
+                : "/uploads/profile/" + user.ProfileImageName;
+            return View(model);
         }
 
         var folder = Path.Combine(_env.WebRootPath, "uploads", "profile");
@@ -425,9 +497,9 @@ namespace GymManagement.Controllers
 
         if (!string.IsNullOrEmpty(user.ProfileImageName) && user.ProfileImageName != "default.png")
         {
-          var oldPath = Path.Combine(folder, user.ProfileImageName);
-          if (System.IO.File.Exists(oldPath))
-            System.IO.File.Delete(oldPath);
+            var oldPath = Path.Combine(folder, user.ProfileImageName);
+            if (System.IO.File.Exists(oldPath))
+                System.IO.File.Delete(oldPath);
         }
 
         var uniqueFile = Guid.NewGuid().ToString() + Path.GetExtension(model.ProfileImageFile.FileName);
@@ -437,27 +509,28 @@ namespace GymManagement.Controllers
         await model.ProfileImageFile.CopyToAsync(stream);
 
         user.ProfileImageName = uniqueFile;
-      }
+    }
 
-      if (!string.IsNullOrWhiteSpace(model.Password))
-      {
+    if (!string.IsNullOrWhiteSpace(model.Password))
+    {
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
         var result = await _userManager.ResetPasswordAsync(user, token, model.Password);
 
         if (!result.Succeeded)
         {
-          foreach (var error in result.Errors)
-            ModelState.AddModelError("", error.Description);
+            foreach (var error in result.Errors)
+                ModelState.AddModelError("", error.Description);
 
-          model.ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
-              ? "/uploads/profile/default.png"
-              : "/uploads/profile/" + user.ProfileImageName;
-          return View(model);
+            model.ProfileImageUrl = string.IsNullOrEmpty(user.ProfileImageName)
+                ? "/uploads/profile/default.png"
+                : "/uploads/profile/" + user.ProfileImageName;
+            return View(model);
         }
-      }
-
-      await _userManager.UpdateAsync(user);
-      return RedirectToAction("ViewProfile");
     }
+
+    await _userManager.UpdateAsync(user);
+    return RedirectToAction("ViewProfile");
+}
+
   }
 }

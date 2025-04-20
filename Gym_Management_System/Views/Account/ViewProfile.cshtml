@@ -111,6 +111,51 @@
             <td class="profile-label">DATE OF BIRTH</td>
             <td class="profile-value">@Model.DOB?.ToString("yyyy-MM-dd")</td>
         </tr>
+        @if (Model.RoleNames.Contains("Customer"))
+{
+    <tr>
+        <td class="profile-label">MEMBERSHIP STATUS</td>
+        <td class="profile-value">@Model.MembershipStatus</td>
+    </tr>
+    <tr>
+        <td class="profile-label">SUBSCRIBED SINCE</td>
+        <td class="profile-value">@Model.SubscriptionDate?.ToString("yyyy-MM-dd")</td>
+    </tr>
+}
+
+@if (Model.RoleNames.Contains("Receptionist"))
+{
+    <tr>
+        <td class="profile-label">AVAILABLE</td>
+        <td class="profile-value">
+            <form asp-action="ToggleAvailability" method="post">
+<input type="hidden" name="isAvailable" value="@((Model.IsAvailable != true).ToString().ToLower())" />
+                <button type="submit" class="btn btn-sm @(Model.IsAvailable == true ? "btn-success" : "btn-secondary")">
+                    @(Model.IsAvailable == true ? "Available" : "Not Available")
+                </button>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td class="profile-label">NOTES</td>
+        <td class="profile-value">@Model.Notes</td>
+    </tr>
+}
+
+
+
+@if (Model.RoleNames.Contains("Trainer"))
+{
+    <tr>
+        <td class="profile-label">SPECIALIZATION</td>
+        <td class="profile-value">@Model.Specialization</td>
+    </tr>
+    <tr>
+        <td class="profile-label">BIO</td>
+        <td class="profile-value">@Model.Bio</td>
+    </tr>
+}
+
     </table>
 
     <a asp-action="EditProfile" class="btn edit-btn">EDIT</a>

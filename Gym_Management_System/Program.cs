@@ -9,11 +9,17 @@ using GymManagement.Services;
 using Microsoft.Extensions.FileProviders;
 using DinkToPdf;
 using DinkToPdf.Contracts;
+using System.Runtime.InteropServices;
+
 var context = new CustomAssemblyLoadContext();
 var builder = WebApplication.CreateBuilder(args);
 
-var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "pdf", "libwkhtmltox.dll");
-context.LoadUnmanagedLibrary(wkhtmltoxPath);
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+{
+    var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "pdf", "libwkhtmltox.dll");
+    context.LoadUnmanagedLibrary(wkhtmltoxPath);
+}
+
 
 
 

@@ -17,12 +17,15 @@ namespace GymManagement.Controllers
   {
     private readonly AppDbContext _db;
 private readonly UserManager<User> _userManager;
+private readonly SignInManager<User> _signInManager;
 
-public ReceptionistController(AppDbContext db, UserManager<User> userManager)
+public ReceptionistController(AppDbContext db, UserManager<User> userManager, SignInManager<User> signInManager)
 {
     _db = db;
     _userManager = userManager;
+    _signInManager = signInManager;
 }
+
 
 
     // 获取当前 Receptionist 实体
@@ -33,6 +36,26 @@ public ReceptionistController(AppDbContext db, UserManager<User> userManager)
 
       return _db.Receptionists.FirstOrDefault(r => r.Id == userId);
     }
+
+    [Authorize(Roles = "Receptionist")]
+    [HttpPost]
+    public async Task<IActionResult> ToggleAvailabilityAjax(bool isAvailable)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is not Receptionist receptionist) return Unauthorized();
+
+        receptionist.IsAvailable = isAvailable;
+        await _userManager.UpdateAsync(receptionist);
+        await _signInManager.RefreshSignInAsync(receptionist);
+
+        return Json(new
+        {
+            available = isAvailable.ToString().ToLower(),
+            text = isAvailable ? "Available" : "Not Available",
+            css = isAvailable ? "btn-success" : "btn-secondary"
+        });
+    }
+
 
 
     public IActionResult Dashboard()
@@ -236,21 +259,68 @@ public async Task<IActionResult> ManageBookings(string filter, string value, int
 
 
     [HttpPost]
-    public IActionResult CreateBooking(CreateBookingInputModel input)
+public async Task<IActionResult> CreateBooking(ManageBookingsViewModel model)
+{
+    if (!ModelState.IsValid)
     {
-      var booking = new Booking
-      {
-        CustomerId = input.CustomerId,
-        UserId = input.CustomerId,
-        BookingDate = DateTime.Now,
-        SessionId = input.SessionId,
-        Status = BookingStatus.Confirmed
-      };
-
-      _db.Bookings.Add(booking);
-      _db.SaveChanges();
-      return RedirectToAction("ManageBookings");
+        TempData["Message"] = "Invalid form submission.";
+        return RedirectToAction("ManageBookings");
     }
+
+    // 验证 Customer 是否存在
+    var customerExists = await _db.Customers.AnyAsync(c => c.Id == model.NewBooking.CustomerId);
+    if (!customerExists)
+    {
+        TempData["Message"] = "Selected customer does not exist.";
+        return RedirectToAction("ManageBookings");
+    }
+
+    // 验证 Session 是否存在
+    var session = await _db.Sessions
+        .Include(s => s.Bookings)
+        .FirstOrDefaultAsync(s => s.SessionId == model.NewBooking.SessionId);
+
+    if (session == null)
+    {
+        TempData["Message"] = "Selected session does not exist.";
+        return RedirectToAction("ManageBookings");
+    }
+
+    // 检查是否已满
+    if (session.Bookings.Count >= session.Capacity)
+    {
+        TempData["Message"] = "Session is full.";
+        return RedirectToAction("ManageBookings");
+    }
+
+    // 检查是否已经预定过
+    var alreadyBooked = await _db.Bookings.AnyAsync(b =>
+        b.CustomerId == model.NewBooking.CustomerId && b.SessionId == model.NewBooking.SessionId);
+
+    if (alreadyBooked)
+    {
+        TempData["Message"] = "This customer is already booked for the selected session.";
+        return RedirectToAction("ManageBookings");
+    }
+
+    // 添加新 Booking
+    var booking = new Booking
+    {
+        SessionId = model.NewBooking.SessionId,
+        CustomerId = model.NewBooking.CustomerId,
+        Status = BookingStatus.Pending,
+        BookingDate = DateTime.Now,
+        UserId = model.NewBooking.CustomerId
+    };
+
+    _db.Bookings.Add(booking);
+    await _db.SaveChangesAsync();
+
+    TempData["Message"] = "Booking successfully created.";
+    return RedirectToAction("ManageBookings");
+}
+
+
 
     [HttpPost]
 public IActionResult ConfirmBooking(int bookingId, string @class, string trainer, string date, string status, int page)

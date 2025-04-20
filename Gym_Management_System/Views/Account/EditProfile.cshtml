@@ -130,6 +130,31 @@
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
 
+        @if (Model.RoleNames.Contains("Receptionist"))
+        {
+            <div class="form-group mb-3">
+                <label class="form-label">Reception Notes</label>
+                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+        }
+
+        @if (Model.RoleNames.Contains("Trainer"))
+        {
+            <div class="form-group mb-3">
+                <label class="form-label">Specialization</label>
+                <input asp-for="Specialization" class="form-control" />
+                <span asp-validation-for="Specialization" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">Bio</label>
+                <textarea asp-for="Bio" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Bio" class="text-danger"></span>
+            </div>
+        }
+
+
         <div class="text-center">
             <button type="submit" class="btn btn-save">Save Changes</button>
         </div>

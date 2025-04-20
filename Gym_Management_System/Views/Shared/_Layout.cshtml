@@ -6,12 +6,14 @@
 @{
     var isSignedIn = SignInManager.IsSignedIn(User);
     var user = isSignedIn ? await UserManager.GetUserAsync(User) : null;
+    var isReceptionist = user is GymManagement.Models.Receptionist;
     var isAdminOnly = isSignedIn && User.IsInRole("Admin")
-    && !(User.IsInRole("Trainer") || User.IsInRole("Receptionist") || User.IsInRole("Customer"));
+        && !(User.IsInRole("Trainer") || User.IsInRole("Receptionist") || User.IsInRole("Customer"));
     var showGuestMenu = !isSignedIn || isAdminOnly;
     var currentController = Context.Request.RouteValues["controller"]?.ToString();
     var currentAction = Context.Request.RouteValues["action"]?.ToString();
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +89,7 @@
     .section-title h2,
     .section-title h3 {
         color: #ffc107;
-        width: fit-content;
+        /* width: fit-content; */
     }
 
     .btn-success {
@@ -173,7 +175,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="mainNavbar">
                     <div class="d-flex w-100 justify-content-between align-items-center">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
                             @if (showGuestMenu)
                             {
                                 <li class="nav-item">
@@ -202,21 +204,14 @@
                                     <li class="nav-item">
                                         <a class="nav-link @(currentAction == "ManageBookings" ? "active" : "")" asp-controller="Receptionist" asp-action="ManageBookings">Bookings</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "CheckIn" ? "active" : "")" asp-controller="Receptionist" asp-action="CheckIn">Check In</a>
-                                    </li>
+                                    
                                 }
                                 else if (User.IsInRole("Customer"))
                                 {
                                     <li class="nav-item">
                                         <a class="nav-link @(currentAction == "Dashboard" ? "active" : "")" asp-controller="Customer" asp-action="Dashboard">Dashboard</a>
                                     </li>
-                                    <li  class="nav-item" class="@(currentController == "Account" && currentAction == "Profile" ? "active" : "")">
-                                        <a class="nav-link @(currentController == "Account" && currentAction == "Profile" ? "active" : "")" asp-controller="Account" asp-action="ViewProfile">Profile</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "Bookings" ? "active" : "")" asp-controller="Customer" asp-action="Bookings">Bookings</a>
-                                    </li>
+                                    
                                     <li class="nav-item">
                                         <a class="nav-link @(currentAction == "BookSession" ? "active" : "")" asp-controller="Customer" asp-action="BookSession">Book Session</a>
                                     </li>
@@ -224,11 +219,12 @@
                                         <a class="nav-link @(currentAction == "Payments" ? "active" : "")" asp-controller="Customer" asp-action="Payments">Payments</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "Membership" ? "active" : "")" asp-controller="Customer" asp-action="Membership">Membership</a>
+                                        <a class="nav-link @(currentAction == "Recharge" ? "active" : "")" asp-controller="Customer" asp-action="Recharge">Recharge</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "SessionCalendar" ? "active" : "")" asp-controller="Customer" asp-action="SessionCalendar">Session Calendar</a>
+                                        <a class="nav-link @(currentAction == "Membership" ? "active" : "")" asp-controller="Customer" asp-action="Membership">Membership</a>
                                     </li>
+                                    
                                     <li class="nav-item">
                                         <a class="nav-link @(currentAction == "TrainerList" ? "active" : "")" asp-controller="Customer" asp-action="TrainerList">Trainer List</a>
                                     </li>
@@ -240,16 +236,33 @@
                         </ul>
                         <div class="d-flex align-items-center">
                             @if (isSignedIn)
-                            {
-                                <span class="text-white me-2" style="margin: 0.2rem;">Hello, @user?.Name!</span>
-                                <img src="@Url.Content("~/uploads/profile/" + (user?.ProfileImageName ?? "default.png"))" class="rounded-circle me-2" width="32" height="32" alt="Avatar" style="margin: 0.2rem;" />
-                                <form asp-controller="Account" asp-action="Logout" method="post" style="margin: 0.2rem;">
-                                    <button class="btn btn-sm btn-outline-light" style="margin: 0.2rem;">Log Out</button>
-                                </form>
-                            }
+{
+    <a asp-controller="Account" asp-action="ViewProfile" 
+       class="d-flex align-items-center text-white text-decoration-none mr-2" style="margin: 0.2rem;">
+        <div class="position-relative mr-2">
+            <img src="@Url.Content("~/uploads/profile/" + (user?.ProfileImageName ?? "default.png"))"
+                 class="rounded-circle mr-1" width="32" height="32" alt="Avatar" />
+            
+            @if (isReceptionist)
+            {
+                <span id="availability-indicator"
+                      class="position-absolute top-0 start-100 translate-middle p-1 border border-light rounded-circle"
+                      style="background-color: @(((Receptionist)user).IsAvailable ? "#28a745" : "#6c757d"); width:12px; height:12px;">
+                </span>
+            }
+        </div>
+        <span>@user?.Name</span>
+    </a>
+
+    <form asp-controller="Account" asp-action="Logout" method="post" style="margin: 0.2rem;">
+        <button class="btn btn-sm btn-outline-light" style="margin: 0.2rem;">Log Out</button>
+    </form>
+}
+
+
                             else
                             {
-                                <a class="btn btn-sm btn-outline-warning me-2" asp-controller="Account" asp-action="Register">Register</a>
+                                <a class="btn btn-sm btn-outline-warning mr-2" asp-controller="Account" asp-action="Register">Register</a>
                                 <a class="btn btn-sm btn-outline-light" asp-controller="Account" asp-action="Login">Log In</a>
                             }
                             <a class="btn btn-sm btn-warning ms-2"
@@ -358,6 +371,35 @@
     <script src="~/js/main.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const btn = document.getElementById("availability-toggle");
+            if (!btn) return;
+
+            btn.addEventListener("click", function () {
+                const now = btn.dataset.available === "true";
+                const next = !now;
+
+                fetch("/Receptionist/ToggleAvailabilityAjax?isAvailable=" + next, {
+                    method: "POST",
+                    headers: {
+                        "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btn.textContent = data.text;
+                    btn.className = "btn btn-sm " + data.css;
+                    btn.dataset.available = data.available;
+
+                    const dot = document.getElementById("availability-indicator");
+                    if (dot) dot.style.backgroundColor = data.available === "true" ? "#28a745" : "#6c757d";
+                });
+            });
+        });
+        </script>
+
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
