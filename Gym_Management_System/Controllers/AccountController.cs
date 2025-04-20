@@ -171,68 +171,77 @@ namespace GymManagement.Controllers
     [HttpGet]
     public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
     {
-      returnUrl ??= Url.Content("~/");
+        returnUrl ??= Url.Content("~/");
 
-      if (remoteError != null)
-      {
-        ModelState.AddModelError("", $"Error from external provider: {remoteError}");
-        return RedirectToAction(nameof(Login));
-      }
-
-      var info = await _signInManager.GetExternalLoginInfoAsync();
-      if (info == null)
-      {
-        ModelState.AddModelError("", "External login info is null.");
-        return RedirectToAction(nameof(Login));
-      }
-
-      var result = await _signInManager.ExternalLoginSignInAsync(
-          info.LoginProvider, info.ProviderKey, isPersistent: false);
-
-      if (result.Succeeded)
-      {
-        var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-        if (existingUser != null)
+        if (remoteError != null)
         {
-          return await RedirectToDashboardByRole(existingUser);
+            ModelState.AddModelError("", $"Error from external provider: {remoteError}");
+            return RedirectToAction(nameof(Login));
         }
 
-        return Redirect(returnUrl);
-      }
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+        {
+            ModelState.AddModelError("", "External login info is null.");
+            return RedirectToAction(nameof(Login));
+        }
 
-      var email = info.Principal?.FindFirstValue(ClaimTypes.Email);
-      var fullName = info.Principal?.FindFirstValue(ClaimTypes.Name) ?? email ?? "Google User";
+        var loginResult = await _signInManager.ExternalLoginSignInAsync(
+            info.LoginProvider, info.ProviderKey, isPersistent: false);
 
-      if (string.IsNullOrWhiteSpace(email))
-      {
-        ModelState.AddModelError("", "Google account missing email claim.");
+        if (loginResult.Succeeded)
+        {
+            var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (existingUser != null)
+            {
+                return await RedirectToDashboardByRole(existingUser);
+            }
+
+            return Redirect(returnUrl);
+        }
+
+        var email = info.Principal?.FindFirstValue(ClaimTypes.Email);
+        var fullName = info.Principal?.FindFirstValue(ClaimTypes.Name) ?? email ?? "Google User";
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            ModelState.AddModelError("", "Google account missing email claim.");
+            return RedirectToAction(nameof(Login));
+        }
+
+        var defaultBranch = await _dbContext.GymBranches.FirstOrDefaultAsync();
+
+        var user = new Customer
+        {
+            UserName = email,
+            Email = email,
+            Name = fullName,
+            JoinDate = DateTime.UtcNow,
+            PhoneNumber = "",
+            MembershipType = MembershipType.Monthly,
+            MembershipStatus = MembershipStatus.Active,
+            SubscriptionDate = DateTime.Now,
+            MembershipExpiry = DateTime.Now.AddMonths(1),
+            GymBranchId = defaultBranch?.BranchId ?? 0
+        };
+
+        var createResult = await _userManager.CreateAsync(user);
+        if (createResult.Succeeded)
+        {
+            await _userManager.AddLoginAsync(user, info);
+            await _userManager.AddToRoleAsync(user, "Customer");
+            user.RoleNames = await _userManager.GetRolesAsync(user);
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return await RedirectToDashboardByRole(user);
+        }
+
+        foreach (var error in createResult.Errors)
+        {
+            ModelState.AddModelError("", error.Description);
+        }
+
         return RedirectToAction(nameof(Login));
-      }
-
-      var newUser = new User
-      {
-        UserName = email,
-        Email = email,
-        Name = fullName,
-        JoinDate = DateTime.UtcNow
-      };
-
-      var createResult = await _userManager.CreateAsync(newUser);
-      if (createResult.Succeeded)
-      {
-        await _userManager.AddLoginAsync(newUser, info);
-        await _userManager.AddToRoleAsync(newUser, "Customer");
-        newUser.RoleNames = await _userManager.GetRolesAsync(newUser);
-        await _signInManager.SignInAsync(newUser, isPersistent: false);
-        return await RedirectToDashboardByRole(newUser);
-      }
-
-      foreach (var error in createResult.Errors)
-      {
-        ModelState.AddModelError("", error.Description);
-      }
-
-      return RedirectToAction(nameof(Login));
     }
 
 
