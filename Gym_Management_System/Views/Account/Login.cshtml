@@ -35,10 +35,13 @@
   @if (!ViewData.ModelState.IsValid && ViewData.ModelState[string.Empty] != null)
   {
     <div class="text-danger mb-3">
-      @foreach (var error in ViewData.ModelState[string.Empty].Errors)
+      @foreach (var error in
+          (ViewData.ModelState[string.Empty]?.Errors.Cast<Microsoft.AspNetCore.Mvc.ModelBinding.ModelError>() ??
+          Enumerable.Empty<Microsoft.AspNetCore.Mvc.ModelBinding.ModelError>()))
       {
         <div>@error.ErrorMessage</div>
       }
+
     </div>
   }
 

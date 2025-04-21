@@ -736,7 +736,6 @@ namespace GymManagement.Migrations
                     b.HasBaseType("GymManagement.Models.User");
 
                     b.Property<string>("Bio")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("BranchId")

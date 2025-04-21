@@ -2,7 +2,7 @@
   "Files": [
     {
       "Id": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\GymManagement.bundle.scp.css",
-      "PackagePath": "staticwebassets\\GymManagement.uj87xq1iza.bundle.scp.css"
+      "PackagePath": "staticwebassets\\GymManagement.bx4y8j0mna.bundle.scp.css"
     },
     {
       "Id": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\css\\barfiller.css",
@@ -1303,6 +1303,10 @@
     {
       "Id": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\uploads\\gymclass\\882811dc-9e7f-4171-be7e-aec49df234b3.jpeg",
       "PackagePath": "staticwebassets\\uploads\\gymclass\\882811dc-9e7f-4171-be7e-aec49df234b3.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\uploads\\gymclass\\b5ecf51c-bee4-4e39-a880-0c860337d619.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\gymclass\\b5ecf51c-bee4-4e39-a880-0c860337d619.jpeg"
     },
     {
       "Id": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\uploads\\gymclass\\class-default.jpg",

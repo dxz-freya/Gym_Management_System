@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "+WySl70cBGUKfuOwpGhYGfHJgl4bMFf50fRHMLcJh/A=",
+  "Hash": "rCBMwO4gXNgEzWoFD6WIemOK9EvRxlOo3D7q99Qafmg=",
   "Source": "GymManagement",
   "BasePath": "_content/GymManagement",
   "Mode": "Default",
@@ -1291,8 +1291,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ApplicationBundle",
-      "Fingerprint": "uj87xq1iza",
-      "Integrity": "9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA=",
+      "Fingerprint": "bx4y8j0mna",
+      "Integrity": "kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\obj\\Debug\\net8.0\\scopedcss\\bundle\\GymManagement.styles.css"
@@ -1312,8 +1312,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ProjectBundle",
-      "Fingerprint": "uj87xq1iza",
-      "Integrity": "9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA=",
+      "Fingerprint": "bx4y8j0mna",
+      "Integrity": "kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\GymManagement.bundle.scp.css"
@@ -1522,8 +1522,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "8xvbksoed9",
-      "Integrity": "XPo0+SnHu5lO/i2fwxhDKd3HbDWsypD5qHxgFkvPqww=",
+      "Fingerprint": "jd2vjjivi7",
+      "Integrity": "OeMR82U3zteOzjgHQj+5eXoOrULxWzHpMMKaQsfvjZ8=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\style.css"
@@ -8144,6 +8144,27 @@
       "OriginalItemSpec": "wwwroot\\uploads\\gymclass\\882811dc-9e7f-4171-be7e-aec49df234b3.jpeg"
     },
     {
+      "Identity": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\uploads\\gymclass\\b5ecf51c-bee4-4e39-a880-0c860337d619.jpeg",
+      "SourceId": "GymManagement",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\",
+      "BasePath": "_content/GymManagement",
+      "RelativePath": "uploads/gymclass/b5ecf51c-bee4-4e39-a880-0c860337d619#[.{fingerprint}]?.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "4xytziq1ye",
+      "Integrity": "CMGFFGvog5YprPTN333Dn4d/D0PbFPol7SVG0K+U8bg=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\gymclass\\b5ecf51c-bee4-4e39-a880-0c860337d619.jpeg"
+    },
+    {
       "Identity": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\uploads\\gymclass\\class-default.jpg",
       "SourceId": "GymManagement",
       "SourceType": "Discovered",
@@ -9031,51 +9052,6 @@
       ]
     },
     {
-      "Route": "css/style.8xvbksoed9.css",
-      "AssetFile": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\css\\style.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "60048"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"XPo0+SnHu5lO/i2fwxhDKd3HbDWsypD5qHxgFkvPqww=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sun, 20 Apr 2025 07:11:57 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "8xvbksoed9"
-        },
-        {
-          "Name": "label",
-          "Value": "css/style.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-XPo0+SnHu5lO/i2fwxhDKd3HbDWsypD5qHxgFkvPqww="
-        }
-      ]
-    },
-    {
       "Route": "css/style.css",
       "AssetFile": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\css\\style.css",
       "Selectors": [],
@@ -9086,7 +9062,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "60048"
+          "Value": "60074"
         },
         {
           "Name": "Content-Type",
@@ -9094,11 +9070,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"XPo0+SnHu5lO/i2fwxhDKd3HbDWsypD5qHxgFkvPqww=\""
+          "Value": "\"OeMR82U3zteOzjgHQj+5eXoOrULxWzHpMMKaQsfvjZ8=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 20 Apr 2025 07:11:57 GMT"
+          "Value": "Sun, 20 Apr 2025 19:31:09 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -9108,7 +9084,52 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-XPo0+SnHu5lO/i2fwxhDKd3HbDWsypD5qHxgFkvPqww="
+          "Value": "sha256-OeMR82U3zteOzjgHQj+5eXoOrULxWzHpMMKaQsfvjZ8="
+        }
+      ]
+    },
+    {
+      "Route": "css/style.jd2vjjivi7.css",
+      "AssetFile": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\css\\style.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "60074"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"OeMR82U3zteOzjgHQj+5eXoOrULxWzHpMMKaQsfvjZ8=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 20 Apr 2025 19:31:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "jd2vjjivi7"
+        },
+        {
+          "Name": "label",
+          "Value": "css/style.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-OeMR82U3zteOzjgHQj+5eXoOrULxWzHpMMKaQsfvjZ8="
         }
       ]
     },
@@ -10107,7 +10128,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "949"
+          "Value": "1125"
         },
         {
           "Name": "Content-Type",
@@ -10115,11 +10136,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA=\""
+          "Value": "\"kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 20 Apr 2025 07:11:56 GMT"
+          "Value": "Mon, 21 Apr 2025 23:02:22 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -10129,7 +10150,97 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA="
+          "Value": "sha256-kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg="
+        }
+      ]
+    },
+    {
+      "Route": "GymManagement.bx4y8j0mna.bundle.scp.css",
+      "AssetFile": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\GymManagement.bundle.scp.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1125"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 21 Apr 2025 23:02:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "bx4y8j0mna"
+        },
+        {
+          "Name": "label",
+          "Value": "GymManagement.bundle.scp.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg="
+        }
+      ]
+    },
+    {
+      "Route": "GymManagement.bx4y8j0mna.styles.css",
+      "AssetFile": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\obj\\Debug\\net8.0\\scopedcss\\bundle\\GymManagement.styles.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1125"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 21 Apr 2025 23:02:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "bx4y8j0mna"
+        },
+        {
+          "Name": "label",
+          "Value": "GymManagement.styles.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg="
         }
       ]
     },
@@ -10144,7 +10255,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "949"
+          "Value": "1125"
         },
         {
           "Name": "Content-Type",
@@ -10152,11 +10263,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA=\""
+          "Value": "\"kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sun, 20 Apr 2025 07:11:56 GMT"
+          "Value": "Mon, 21 Apr 2025 23:02:22 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -10166,97 +10277,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA="
-        }
-      ]
-    },
-    {
-      "Route": "GymManagement.uj87xq1iza.bundle.scp.css",
-      "AssetFile": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\GymManagement.bundle.scp.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "949"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sun, 20 Apr 2025 07:11:56 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "uj87xq1iza"
-        },
-        {
-          "Name": "label",
-          "Value": "GymManagement.bundle.scp.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA="
-        }
-      ]
-    },
-    {
-      "Route": "GymManagement.uj87xq1iza.styles.css",
-      "AssetFile": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\obj\\Debug\\net8.0\\scopedcss\\bundle\\GymManagement.styles.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "949"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Sun, 20 Apr 2025 07:11:56 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "uj87xq1iza"
-        },
-        {
-          "Name": "label",
-          "Value": "GymManagement.styles.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-9t8tXdjfN1zsviNrPyu78hZ9KWqqTksxtk6vxj+SKbA="
+          "Value": "sha256-kf6n+W4/UnqmwqH6xOy0b3FY2qvAW7ydNZ2vL10vPmg="
         }
       ]
     },
@@ -37313,6 +37334,88 @@
         {
           "Name": "Last-Modified",
           "Value": "Sat, 19 Apr 2025 06:58:21 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-CMGFFGvog5YprPTN333Dn4d/D0PbFPol7SVG0K+U8bg="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/gymclass/b5ecf51c-bee4-4e39-a880-0c860337d619.4xytziq1ye.jpeg",
+      "AssetFile": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\uploads\\gymclass\\b5ecf51c-bee4-4e39-a880-0c860337d619.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "432506"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"CMGFFGvog5YprPTN333Dn4d/D0PbFPol7SVG0K+U8bg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 20 Apr 2025 19:31:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "4xytziq1ye"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/gymclass/b5ecf51c-bee4-4e39-a880-0c860337d619.jpeg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-CMGFFGvog5YprPTN333Dn4d/D0PbFPol7SVG0K+U8bg="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/gymclass/b5ecf51c-bee4-4e39-a880-0c860337d619.jpeg",
+      "AssetFile": "C:\\Users\\cong_\\Gym_Management_System\\Gym_Management_System\\wwwroot\\uploads\\gymclass\\b5ecf51c-bee4-4e39-a880-0c860337d619.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "432506"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"CMGFFGvog5YprPTN333Dn4d/D0PbFPol7SVG0K+U8bg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 20 Apr 2025 19:31:09 GMT"
         },
         {
           "Name": "Cache-Control",

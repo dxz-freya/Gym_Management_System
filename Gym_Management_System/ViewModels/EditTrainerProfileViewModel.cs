@@ -9,7 +9,7 @@ namespace GymManagement.ViewModels
     public required string Name { get; set; }
 
     // Required email field
-    public required string Email { get; set; }
+    public required string? Email { get; set; }
 
     // Optional specialization
     public string? Specialization { get; set; }

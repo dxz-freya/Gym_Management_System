@@ -23,8 +23,8 @@ public class GymBranchController : Controller
     {
       BranchId = b.BranchId,
       BranchName = b.BranchName,
-      Address = b.Address,
-      ContactNumber = b.ContactNumber,
+      Address = b.Address ?? string.Empty,
+      ContactNumber = b.ContactNumber ?? string.Empty,
       TrainerCount = _dbContext.Trainers.Count(t => t.BranchId == b.BranchId),
       ReceptionistCount = _dbContext.Receptionists.Count(r => r.BranchId == b.BranchId),
       RoomCount = _dbContext.Rooms.Count(r => r.BranchId == b.BranchId),
@@ -51,7 +51,7 @@ public class GymBranchController : Controller
     var sessions = _dbContext.Sessions
         .Include(s => s.GymClass)
         .Include(s => s.Trainer)
-        .Where(s => s.Trainer.GymBranch.BranchId == id)
+        .Where(s => s.Trainer != null && s.Trainer.GymBranch != null && s.Trainer.GymBranch.BranchId == id)
         .ToList();
 
     var viewModel = new GymBranchDetailsViewModel

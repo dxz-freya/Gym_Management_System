@@ -12,14 +12,14 @@ else
 {
     foreach (var user in Model.Users)
     {
-        bool onlyAdmin = user.RoleNames.Count == 1 && user.RoleNames.Contains("Admin");
-        bool isAdmin = user.RoleNames.Contains("Admin");
+        bool onlyAdmin = user.RoleNames != null && user.RoleNames.Count == 1 && user.RoleNames.Contains("Admin");
+        bool isAdmin = user.RoleNames != null && user.RoleNames.Contains("Admin");
 
         <tr>
             <td>@user.UserName</td>
             <td>@user.Name</td>
             <td>
-                @foreach (var role in user.RoleNames)
+                @foreach (var role in user.RoleNames ?? Enumerable.Empty<string>())
                 {
                     <span class="badge bg-info text-dark mr-1">@role</span>
                 }

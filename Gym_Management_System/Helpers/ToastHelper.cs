@@ -4,7 +4,7 @@ namespace GymManagement.Helpers
 {
     public static class ToastHelper
     {
-        public static void ShowToast(Controller controller, string message, string type = "info", string title = null)
+        public static void ShowToast(Controller controller, string message, string type = "info", string? title = null)
         {
             controller.TempData["ToastMessage"] = message;
             controller.TempData["ToastClass"] = type; // "success", "danger", "warning", "info"

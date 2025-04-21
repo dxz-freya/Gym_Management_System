@@ -53,131 +53,131 @@ namespace GymManagement.Controllers
     [HttpGet]
     public async Task<IActionResult> GetSessionBookings(int sessionId, int page = 1, int pageSize = 5)
     {
-        var bookings = await _dbContext.Bookings
-            .Where(b => b.SessionId == sessionId)
-            .Include(b => b.Customer)
-            .Include(b => b.Session).ThenInclude(s => s.GymClass)
-            .OrderBy(b => b.BookingId)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(b => new
-            {
-                customerName = b.Customer.Name,
-                sessionName = b.Session.GymClass.ClassName,
-                sessionTime = b.Session.SessionDateTime.ToString("yyyy-MM-dd HH:mm"),
-                status = b.Status.ToString()
-            })
-            .ToListAsync();
+      var bookings = await _dbContext.Bookings
+          .Where(b => b.SessionId == sessionId)
+          .Include(b => b.Customer)
+          .Include(b => b.Session).ThenInclude(s => s.GymClass)
+          .OrderBy(b => b.BookingId)
+          .Skip((page - 1) * pageSize)
+          .Take(pageSize)
+          .Select(b => new
+          {
+            customerName = b.Customer.Name,
+            sessionName = b.Session.GymClass.ClassName,
+            sessionTime = b.Session.SessionDateTime.ToString("yyyy-MM-dd HH:mm"),
+            status = b.Status.ToString()
+          })
+          .ToListAsync();
 
-        int totalCount = await _dbContext.Bookings.CountAsync(b => b.SessionId == sessionId);
+      int totalCount = await _dbContext.Bookings.CountAsync(b => b.SessionId == sessionId);
 
-        return Json(new { bookings, totalCount });
+      return Json(new { bookings, totalCount });
     }
     // 显示 Trainer 自己的 GymClasses 页面
-        [HttpGet]
-        public IActionResult MyGymClasses()
-        {
-            var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    [HttpGet]
+    public IActionResult MyGymClasses()
+    {
+      var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var gymClasses = _dbContext.GymClasses
-                .Where(g => g.TrainerId == trainerId)
-                .OrderByDescending(g => g.AvailableTime)
-                .Select(g => new GymClassViewModel
-                {
-                    GymClassId = g.GymClassId,
-                    ClassName = g.ClassName,
-                    AvailableTime = g.AvailableTime,
-                    Duration = g.Duration,
-                    Description = g.Description,
-                    ImageName = g.ImageName 
-                }).ToList();
+      var gymClasses = _dbContext.GymClasses
+          .Where(g => g.TrainerId == trainerId)
+          .OrderByDescending(g => g.AvailableTime)
+          .Select(g => new GymClassViewModel
+          {
+            GymClassId = g.GymClassId,
+            ClassName = g.ClassName,
+            AvailableTime = g.AvailableTime,
+            Duration = g.Duration,
+            Description = g.Description ?? "",
+            ImageName = g.ImageName
+          }).ToList();
 
-            return View(gymClasses);
-        }
+      return View(gymClasses);
+    }
 
 
-        // 创建 GymClass（modal 提交）
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateGymClass(GymClassViewModel model)
-        {
-            if (!ModelState.IsValid) return View(model);
+    // 创建 GymClass（modal 提交）
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateGymClass(GymClassViewModel model)
+    {
+      if (!ModelState.IsValid) return View(model);
 
-            var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var imageName = await SaveImageAsync(model.ImageFile) ?? "class-default.jpg";
+      var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var imageName = await SaveImageAsync(model.ImageFile) ?? "class-default.jpg";
 
-            var gymClass = new GymClass
-            {
-                ClassName = model.ClassName,
-                Description = model.Description,
-                Duration = model.Duration,
-                AvailableTime = model.AvailableTime,
-                TrainerId = trainerId,
-                ImageName = imageName
-            };
-
-            _dbContext.GymClasses.Add(gymClass);
-            await _dbContext.SaveChangesAsync();
-
-            return RedirectToAction(nameof(MyGymClasses));
-        }
-
-        // 编辑 GymClass（modal 提交）
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditGymClass(GymClassViewModel model)
-        {
-            if (!ModelState.IsValid) return View(model);
-
-            var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var gymClass = _dbContext.GymClasses.FirstOrDefault(g =>
-                g.GymClassId == model.GymClassId && g.TrainerId == trainerId);
-
-            if (gymClass == null) return NotFound();
-
-            gymClass.ClassName = model.ClassName;
-            gymClass.Description = model.Description;
-            gymClass.AvailableTime = model.AvailableTime;
-            gymClass.Duration = model.Duration;
-
-            var newImage = await SaveImageAsync(model.ImageFile);
-            if (!string.IsNullOrEmpty(newImage))
-                gymClass.ImageName = newImage;
-
-            await _dbContext.SaveChangesAsync();
-            return RedirectToAction(nameof(MyGymClasses));
-        }
-
-        // 删除 GymClass（modal 提交）
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteGymClass(int id)
-        {
-            var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var gymClass = _dbContext.GymClasses.FirstOrDefault(g =>
-                g.GymClassId == id && g.TrainerId == trainerId);
-
-            if (gymClass == null) return NotFound();
-
-            _dbContext.GymClasses.Remove(gymClass);
-            _dbContext.SaveChanges();
-            return RedirectToAction(nameof(MyGymClasses));
-        }
-
-      // 查看教练的所有 Session
-      public IActionResult ViewSessions()
+      var gymClass = new GymClass
       {
-        var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        ClassName = model.ClassName,
+        Description = model.Description,
+        Duration = model.Duration,
+        AvailableTime = model.AvailableTime,
+        TrainerId = trainerId!,
+        ImageName = imageName
+      };
 
-        var sessions = _dbContext.Sessions
-            .Include(s => s.GymClass)
-            .Include(s => s.Room)
-            .Where(s => s.TrainerId == trainerId)
-            .OrderBy(s => s.SessionDateTime)
-            .ToList();
+      _dbContext.GymClasses.Add(gymClass);
+      await _dbContext.SaveChangesAsync();
 
-        return View(sessions);
-      }
+      return RedirectToAction(nameof(MyGymClasses));
+    }
+
+    // 编辑 GymClass（modal 提交）
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditGymClass(GymClassViewModel model)
+    {
+      if (!ModelState.IsValid) return View(model);
+
+      var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var gymClass = _dbContext.GymClasses.FirstOrDefault(g =>
+          g.GymClassId == model.GymClassId && g.TrainerId == trainerId);
+
+      if (gymClass == null) return NotFound();
+
+      gymClass.ClassName = model.ClassName;
+      gymClass.Description = model.Description;
+      gymClass.AvailableTime = model.AvailableTime;
+      gymClass.Duration = model.Duration;
+
+      var newImage = await SaveImageAsync(model.ImageFile);
+      if (!string.IsNullOrEmpty(newImage))
+        gymClass.ImageName = newImage;
+
+      await _dbContext.SaveChangesAsync();
+      return RedirectToAction(nameof(MyGymClasses));
+    }
+
+    // 删除 GymClass（modal 提交）
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult DeleteGymClass(int id)
+    {
+      var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      var gymClass = _dbContext.GymClasses.FirstOrDefault(g =>
+          g.GymClassId == id && g.TrainerId == trainerId);
+
+      if (gymClass == null) return NotFound();
+
+      _dbContext.GymClasses.Remove(gymClass);
+      _dbContext.SaveChanges();
+      return RedirectToAction(nameof(MyGymClasses));
+    }
+
+    // 查看教练的所有 Session
+    public IActionResult ViewSessions()
+    {
+      var trainerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+      var sessions = _dbContext.Sessions
+          .Include(s => s.GymClass)
+          .Include(s => s.Room)
+          .Where(s => s.TrainerId == trainerId)
+          .OrderBy(s => s.SessionDateTime)
+          .ToList();
+
+      return View(sessions);
+    }
 
     // 查看某个 Session 详情（包括预约列表）
     public IActionResult SessionDetails(int sessionId)
@@ -250,20 +250,20 @@ namespace GymManagement.Controllers
 
     private async Task<string?> SaveImageAsync(IFormFile? imageFile)
     {
-        if (imageFile == null || imageFile.Length == 0) return null;
+      if (imageFile == null || imageFile.Length == 0) return null;
 
-        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/gymclass");
-        if (!Directory.Exists(uploadsFolder))
-            Directory.CreateDirectory(uploadsFolder);
+      var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/gymclass");
+      if (!Directory.Exists(uploadsFolder))
+        Directory.CreateDirectory(uploadsFolder);
 
-        var extension = Path.GetExtension(imageFile.FileName);
-        var fileName = $"{Guid.NewGuid()}{extension}";
-        var filePath = Path.Combine(uploadsFolder, fileName);
+      var extension = Path.GetExtension(imageFile.FileName);
+      var fileName = $"{Guid.NewGuid()}{extension}";
+      var filePath = Path.Combine(uploadsFolder, fileName);
 
-        using var stream = new FileStream(filePath, FileMode.Create);
-        await imageFile.CopyToAsync(stream);
+      using var stream = new FileStream(filePath, FileMode.Create);
+      await imageFile.CopyToAsync(stream);
 
-        return fileName;
+      return fileName;
     }
   }
 }

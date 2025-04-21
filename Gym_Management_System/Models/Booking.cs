@@ -12,7 +12,7 @@ namespace GymManagement.Models
     public string UserId { get; set; } = string.Empty; // 添加 UserId 字段
 
     [ForeignKey("UserId")]
-    public User User { get; set; } // 外键与 User 关联
+    public User User { get; set; } = null!; // 外键与 User 关联
 
     [Required]
     public DateTime BookingDate { get; set; }

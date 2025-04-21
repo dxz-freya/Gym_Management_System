@@ -134,7 +134,7 @@ namespace GymManagement.Areas.Admin.Controllers
               Text = c.ToString(),
               Value = c.ToString()
             }).ToList();
-        vm.BranchName = null;
+        vm.BranchName = string.Empty;
         return View(vm);
       }
 

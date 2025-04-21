@@ -16,8 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 {
-    var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "pdf", "libwkhtmltox.dll");
-    context.LoadUnmanagedLibrary(wkhtmltoxPath);
+  var wkhtmltoxPath = Path.Combine(builder.Environment.WebRootPath, "lib", "pdf", "libwkhtmltox.dll");
+  context.LoadUnmanagedLibrary(wkhtmltoxPath);
 }
 
 
@@ -48,23 +48,29 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-    options.ExpireTimeSpan = TimeSpan.FromDays(14);
-    options.SlidingExpiration = true;
-    options.Cookie.IsEssential = true;
+  options.LoginPath = "/Account/Login";
+  options.AccessDeniedPath = "/Account/AccessDenied";
+  options.ExpireTimeSpan = TimeSpan.FromDays(14);
+  options.SlidingExpiration = true;
+  options.Cookie.IsEssential = true;
 
-    // 自动清除失效用户 Cookie
-    options.Events.OnValidatePrincipal = async context =>
+  // 自动清除失效用户 Cookie
+  options.Events.OnValidatePrincipal = async context =>
+  {
+    if (context.Principal == null)
     {
-        var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<User>>();
-        var user = await userManager.GetUserAsync(context.Principal);
-        if (user == null)
-        {
-            context.RejectPrincipal();
-            await context.HttpContext.SignOutAsync();
-        }
-    };
+      context.RejectPrincipal();
+      await context.HttpContext.SignOutAsync();
+      return;
+    }
+    var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<User>>();
+    var user = await userManager.GetUserAsync(context.Principal);
+    if (user == null)
+    {
+      context.RejectPrincipal();
+      await context.HttpContext.SignOutAsync();
+    }
+  };
 });
 
 

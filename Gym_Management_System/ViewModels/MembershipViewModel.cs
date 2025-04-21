@@ -7,9 +7,9 @@ namespace GymManagement.ViewModels
 {
     public class MembershipViewModel
     {
-        public string Name { get; set; }
-        public string MembershipType { get; set; }
-        public string MembershipStatus { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? MembershipType { get; set; }
+        public string MembershipStatus { get; set; } = string.Empty;
         public DateTime? ExpiryDate { get; set; }
         public int RemainingDays { get; set; }
         public List<PaymentViewModel> Payments { get; set; } = new();

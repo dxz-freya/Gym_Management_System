@@ -8,7 +8,7 @@ using GymManagement.Services;
 using GymManagement.ViewModels;
 using GymManagement.Models;
 using GymManagement.Helpers;
-using GymManagement.Areas.Admin.Models; 
+using GymManagement.Areas.Admin.Models;
 
 
 namespace GymManagement.Areas.Admin.Controllers
@@ -41,8 +41,8 @@ namespace GymManagement.Areas.Admin.Controllers
       // fuzzy query
       if (!string.IsNullOrWhiteSpace(keyword))
       {
-          allUsers = allUsers.Where(u =>
-              u.UserName.Contains(keyword) || u.Name.Contains(keyword));
+        allUsers = allUsers.Where(u =>
+            (u.UserName != null && u.UserName.Contains(keyword)) || (u.Name != null && u.Name.Contains(keyword)));
       }
 
       var usersPage = allUsers
@@ -67,7 +67,7 @@ namespace GymManagement.Areas.Admin.Controllers
           TotalItems = allUsers.Count()
         }
       };
-      ViewBag.Keyword = keyword; 
+      ViewBag.Keyword = keyword;
       return View(model);
     }
 
@@ -205,13 +205,13 @@ namespace GymManagement.Areas.Admin.Controllers
       var model = new UserEditViewModel
       {
         Id = user.Id,
-        Username = user.UserName,
+        Username = user.UserName ?? string.Empty,
         FullName = user.Name,
-        Contact = user.Email,
-        SelectedRole = roles.FirstOrDefault(r => r != "Admin"),
+        Contact = user.Email ?? "",
+        SelectedRole = roles.FirstOrDefault(r => r != "Admin") ?? string.Empty,
         AvailableRoles = await roleManager.Roles
                               .Where(r => r.Name != "Admin")
-                              .Select(r => r.Name)
+                              .Select(r => r.Name ?? string.Empty)
                               .ToListAsync()
       };
 
@@ -225,9 +225,9 @@ namespace GymManagement.Areas.Admin.Controllers
       {
         // 如果验证失败，重新加载角色列表以供下拉菜单显示
         model.AvailableRoles = await roleManager.Roles
-            .Where(r => r.Name != "Admin")
-            .Select(r => r.Name)
-            .ToListAsync();
+                  .Where(r => r.Name != "Admin")
+                  .Select(r => r.Name ?? string.Empty)
+                  .ToListAsync();
 
         return View(model); // 返回页面，显示错误信息
       }
@@ -261,7 +261,7 @@ namespace GymManagement.Areas.Admin.Controllers
       // 更新失败也要重新载入 role 列表
       model.AvailableRoles = await roleManager.Roles
           .Where(r => r.Name != "Admin")
-          .Select(r => r.Name)
+          .Select(r => r.Name!)
           .ToListAsync();
 
       return View(model);
@@ -276,7 +276,7 @@ namespace GymManagement.Areas.Admin.Controllers
       {
         AvailableRoles = roleManager.Roles
               .Where(r => r.Name != "Admin")
-              .Select(r => r.Name)
+              .Select(r => r.Name!)
               .ToList()
       };
 
@@ -288,7 +288,7 @@ namespace GymManagement.Areas.Admin.Controllers
     {
       model.AvailableRoles = roleManager.Roles
           .Where(r => r.Name != "Admin")
-          .Select(r => r.Name)
+          .Select(r => r.Name!)
           .ToList();
 
       if (!ModelState.IsValid)

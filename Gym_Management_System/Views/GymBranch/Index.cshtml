@@ -8,31 +8,31 @@
     var pricing = new Dictionary<string, (decimal, string[], string)>
     {
         ["Monthly"] = (59.99m, new[] {
-            "Access to all gym equipment",
-            "Group fitness classes (limited slots)",
-            "1 Personal trainer consultation",
-            "Standard locker access",
-            "No commitment, cancel anytime",
-            "Open 6AM - 10PM daily"
-        }, "MONTHLY (+1 MONTH)"),
+"Access to all gym equipment",
+"Group fitness classes (limited slots)",
+"1 Personal trainer consultation",
+"Standard locker access",
+"No commitment, cancel anytime",
+"Open 6AM - 10PM daily"
+}, "MONTHLY (+1 MONTH)"),
 
         ["Quarterly"] = (149.99m, new[] {
-            "Unlimited group class access",
-            "2 Personal trainer sessions/month",
-            "Premium locker + shower access",
-            "Free gym bag + towel",
-            "Priority booking for peak hours",
-            "Valid for 3 months"
-        }, "QUARTERLY (+3 MONTHS)"),
+"Unlimited group class access",
+"2 Personal trainer sessions/month",
+"Premium locker + shower access",
+"Free gym bag + towel",
+"Priority booking for peak hours",
+"Valid for 3 months"
+}, "QUARTERLY (+3 MONTHS)"),
 
         ["Yearly"] = (499.99m, new[] {
-            "All-inclusive VIP access",
-            "Monthly body analysis & diet plan",
-            "Unlimited personal trainer sessions",
-            "Free exclusive merch package",
-            "Priority access to new programs",
-            "12-month full access & perks"
-        }, "YEARLY (+12 MONTHS)")
+"All-inclusive VIP access",
+"Monthly body analysis & diet plan",
+"Unlimited personal trainer sessions",
+"Free exclusive merch package",
+"Priority access to new programs",
+"12-month full access & perks"
+}, "YEARLY (+12 MONTHS)")
     };
 }
 
@@ -72,7 +72,7 @@
                     <a asp-controller="GymBranch" asp-action="Details" asp-route-id="@branch.BranchId">
                         <div class="ss-pic">
                             <img src="@branch.ImageUrl" alt="@branch.BranchName" class="img-fluid"
-                                 style="height: 240px; object-fit: cover;" />
+                                style="height: 240px; object-fit: cover;" />
                         </div>
                     </a>
                     <div class="ss-text second-row">
@@ -85,7 +85,7 @@
                             <li><i class="fa fa-building text-warning"></i> Rooms: @branch.RoomCount</li>
                         </ul>
                         <a class="text-warning" asp-controller="GymBranch" asp-action="Details"
-                           asp-route-id="@branch.BranchId">Explore</a>
+                            asp-route-id="@branch.BranchId">Explore</a>
                     </div>
                 </div>
             }
@@ -135,11 +135,12 @@
                             <span>@label</span>
                         </div>
                         <ul class="list-unstyled text-light mb-4">
-                            @foreach (var f in features) {
+                            @foreach (var f in features)
+                            {
                                 <li>@f</li>
                             }
                         </ul>
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User.Identity?.IsAuthenticated == true)
                         {
                             <form asp-action="RenewMembership" asp-controller="Customer" method="post">
                                 <input type="hidden" name="plan" value="@planName" />

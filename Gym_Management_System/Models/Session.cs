@@ -22,7 +22,7 @@ namespace GymManagement.Models
 
 
     [Required]
-    public string SessionName { get; set; } // 修改了数据类型
+    public string SessionName { get; set; } = string.Empty; // 修改了数据类型
 
     [Required]
     public DateTime SessionDateTime { get; set; }

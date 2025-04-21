@@ -1,6 +1,6 @@
 @model GymManagement.ViewModels.ManageBookingsViewModel
 @using GymManagement.Models
-@using System.Globalization; 
+@using System.Globalization;
 @{
     ViewData["Title"] = "Manage Bookings";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -27,11 +27,16 @@
     if (!string.IsNullOrEmpty(selectedStatus) && Enum.TryParse<BookingStatus>(selectedStatus, out var status))
         filteredBookings = filteredBookings.Where(b => b.Status == status).ToList();
 
+    filteredBookings = filteredBookings
+    .OrderBy(b => b.Session.SessionDateTime)
+    .ToList();
+
     var totalPages = (int)Math.Ceiling((double)filteredBookings.Count / pageSize);
     var pagedBookings = filteredBookings.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
 }
 
-<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/img/breadcrumb-bg.jpg")" style="background-image: url('@Url.Content("~/img/breadcrumb-bg.jpg")');">
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/img/breadcrumb-bg.jpg")"
+    style="background-image: url('@Url.Content("~/img/breadcrumb-bg.jpg")');">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -86,7 +91,8 @@
 
                 <select name="class" class="form-control d-inline w-auto">
                     <option value="">All Classes</option>
-                    @foreach (var option in gymClassOptions) {
+                    @foreach (var option in gymClassOptions)
+                    {
                         var selected = selectedClass == option ? "selected" : "";
                         @:<option value="@option" @selected>@option</option>
                     }
@@ -94,7 +100,8 @@
 
                 <select name="trainer" class="form-control d-inline w-auto">
                     <option value="">All Trainers</option>
-                    @foreach (var option in trainerOptions) {
+                    @foreach (var option in trainerOptions)
+                    {
                         var selected = selectedTrainer == option ? "selected" : "";
                         @:<option value="@option" @selected>@option</option>
                     }
@@ -102,7 +109,8 @@
 
                 <select name="date" class="form-control d-inline w-auto">
                     <option value="">All Dates</option>
-                    @foreach (var option in dateOptions) {
+                    @foreach (var option in dateOptions)
+                    {
                         var dstr = option.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
                         var selected = selectedDate == dstr ? "selected" : "";
                         @:<option value="@dstr" @selected>@dstr</option>
@@ -111,7 +119,8 @@
 
                 <select name="status" class="form-control d-inline w-auto">
                     <option value="">All Statuses</option>
-                    @foreach (var option in statusOptions) {
+                    @foreach (var option in statusOptions)
+                    {
                         var selected = selectedStatus == option ? "selected" : "";
                         @:<option value="@option" @selected>@option</option>
                     }
@@ -180,13 +189,13 @@
         <div class="text-center mt-4">
             @if (totalPages > 1)
             {
-                int maxPagesToShow = 5;
                 int startPage = Math.Max(1, currentPage - 2);
                 int endPage = Math.Min(totalPages, currentPage + 2);
 
                 if (startPage > 1)
                 {
-                    <a class="btn btn-sm btn-outline-warning mx-1" href="@Url.Action("ManageBookings", new { @class = selectedClass, trainer = selectedTrainer, date = selectedDate, status = selectedStatus, page = 1 })">1</a>
+                    <a class="btn btn-sm btn-outline-warning mx-1"
+                        href="@Url.Action("ManageBookings", new { @class = selectedClass, trainer = selectedTrainer, date = selectedDate, status = selectedStatus, page = 1 })">1</a>
                     if (startPage > 2)
                     {
                         <span class="mx-1">...</span>
@@ -196,7 +205,7 @@
                 for (int i = startPage; i <= endPage; i++)
                 {
                     <a class="btn btn-sm btn-outline-warning mx-1 @(i == currentPage ? "font-weight-bold" : "")"
-                       href="@Url.Action("ManageBookings", new { @class = selectedClass, trainer = selectedTrainer, date = selectedDate, status = selectedStatus, page = i })">@i</a>
+                        href="@Url.Action("ManageBookings", new { @class = selectedClass, trainer = selectedTrainer, date = selectedDate, status = selectedStatus, page = i })">@i</a>
                 }
 
                 if (endPage < totalPages)
@@ -205,7 +214,8 @@
                     {
                         <span class="mx-1">...</span>
                     }
-                    <a class="btn btn-sm btn-outline-warning mx-1" href="@Url.Action("ManageBookings", new { @class = selectedClass, trainer = selectedTrainer, date = selectedDate, status = selectedStatus, page = totalPages })">@totalPages</a>
+                    <a class="btn btn-sm btn-outline-warning mx-1"
+                        href="@Url.Action("ManageBookings", new { @class = selectedClass, trainer = selectedTrainer, date = selectedDate, status = selectedStatus, page = totalPages })">@totalPages</a>
                 }
             }
         </div>

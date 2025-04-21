@@ -37,3 +37,13 @@ a[b-qxm3t3f4x5] {
   margin: 1rem 0;
   
 }
+
+.table[b-qxm3t3f4x5] {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table th[b-qxm3t3f4x5], .table td[b-qxm3t3f4x5] {
+  white-space: normal;
+  word-wrap: break-word;
+}

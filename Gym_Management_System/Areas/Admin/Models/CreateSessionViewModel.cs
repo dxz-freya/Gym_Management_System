@@ -18,13 +18,13 @@ namespace GymManagement.Areas.Admin.Models
         [DataType(DataType.DateTime)]
         public DateTime SessionDateTime { get; set; }
         public int GymClassId { get; set; }
-        public string TrainerId { get; set; }
+        public string TrainerId { get; set; } = string.Empty;
         public int RoomId { get; set; }
         public int Capacity { get; set; }
 
         public string BranchName { get; set; } = string.Empty;
 
-        public SessionCategory Category { get; set; } 
+        public SessionCategory Category { get; set; }
         public List<SelectListItem> CategoryList { get; set; } = new();
 
         public List<SelectListItem> GymClassList { get; set; } = new();

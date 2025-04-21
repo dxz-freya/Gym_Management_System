@@ -8,7 +8,7 @@
     var user = isSignedIn ? await UserManager.GetUserAsync(User) : null;
     var isReceptionist = user is GymManagement.Models.Receptionist;
     var isAdminOnly = isSignedIn && User.IsInRole("Admin")
-        && !(User.IsInRole("Trainer") || User.IsInRole("Receptionist") || User.IsInRole("Customer"));
+    && !(User.IsInRole("Trainer") || User.IsInRole("Receptionist") || User.IsInRole("Customer"));
     var showGuestMenu = !isSignedIn || isAdminOnly;
     var currentController = Context.Request.RouteValues["controller"]?.ToString();
     var currentAction = Context.Request.RouteValues["action"]?.ToString();
@@ -41,79 +41,80 @@
 
 
 
-<!-- Orbitron 字体 -->
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <!-- Orbitron 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
 
-<!-- 自定义霓虹样式 -->
-<style>
-    .breadcrumb-section {
-        background-image: url('/img/breadcrumb-bg.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        padding: 100px 0;
-        color: white;
-    }
+    <!-- 自定义霓虹样式 -->
+    <style>
+        .breadcrumb-section {
+            background-image: url('/img/breadcrumb-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 100px 0;
+            color: white;
+        }
 
-    .breadcrumb-text h2,
-    .breadcrumb-text a,
-    .breadcrumb-text span {
-        color: white;
-    }
+        .breadcrumb-text h2,
+        .breadcrumb-text a,
+        .breadcrumb-text span {
+            color: white;
+        }
 
-    th,
-    td {
-        color: #fff;
-        vertical-align: middle;
-    }
+        th,
+        td {
+            color: #fff;
+            vertical-align: middle;
+        }
 
-    .table {
-        background-color: #1c1c1c;
-    }
+        .table {
+            background-color: #1c1c1c;
+        }
 
-    .table thead th {
-        background-color: #292b2c;
-        color: #ffc107;
-        font-weight: bold;
-        border-color: #444;
-    }
+        .table thead th {
+            background-color: #292b2c;
+            color: #ffc107;
+            font-weight: bold;
+            border-color: #444;
+        }
 
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #2a2a2a;
-    }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #2a2a2a;
+        }
 
-    .table-striped tbody tr:nth-of-type(even) {
-        background-color: #1f1f1f;
-    }
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #1f1f1f;
+        }
 
-    .section-title h2,
-    .section-title h3 {
-        color: #ffc107;
-        /* width: fit-content; */
-    }
+        .section-title h2,
+        .section-title h3 {
+            color: #ffc107;
+            /* width: fit-content; */
+        }
 
-    .btn-success {
-        background-color: #28a745;
-        border-color: #28a745;
-    }
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
 
-    .canvas-menu ul {
-        padding-left: 0;
-        list-style: none;
-    }
-    .canvas-menu ul li a {
-        color: #fff;
-        display: block;
-        padding: 10px 0;
-        border-bottom: 1px solid #333;
-    }
-    .navbar-dark .navbar-nav .nav-link {
-        padding: 0.3rem 0.3rem;
-    }
-    
-</style>
+        .canvas-menu ul {
+            padding-left: 0;
+            list-style: none;
+        }
 
-@RenderSection("Styles", required: false)
+        .canvas-menu ul li a {
+            color: #fff;
+            display: block;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            padding: 0.3rem 0.3rem;
+        }
+    </style>
+
+    @RenderSection("Styles", required: false)
 
 
 </head>
@@ -170,7 +171,8 @@
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     <img src="~/img/logo.png" alt="Gym Logo" height="40" />
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="mainNavbar">
@@ -179,10 +181,12 @@
                             @if (showGuestMenu)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a>
+                                    <a class="nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")"
+                                        asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link @(currentController == "GymBranch" ? "active" : "")" asp-controller="GymBranch" asp-action="Index">Gym Branches</a>
+                                    <a class="nav-link @(currentController == "GymBranch" ? "active" : "")"
+                                        asp-controller="GymBranch" asp-action="Index">Gym Branches</a>
                                 </li>
                             }
                             else
@@ -190,65 +194,78 @@
                                 if (User.IsInRole("Trainer"))
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "Dashboard" ? "active" : "")" asp-controller="Trainer" asp-action="Dashboard">Trainer Dashboard</a>
+                                        <a class="nav-link @(currentAction == "Dashboard" ? "active" : "")"
+                                            asp-controller="Trainer" asp-action="Dashboard">Trainer Dashboard</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "MyGymClasses" ? "active" : "")" asp-controller="Trainer" asp-action="MyGymClasses">My Gym Classes</a>
+                                        <a class="nav-link @(currentAction == "MyGymClasses" ? "active" : "")"
+                                            asp-controller="Trainer" asp-action="MyGymClasses">My Gym Classes</a>
                                     </li>
                                 }
                                 else if (User.IsInRole("Receptionist"))
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "Dashboard" ? "active" : "")" asp-controller="Receptionist" asp-action="Dashboard">Receptionist Dashboard</a>
+                                        <a class="nav-link @(currentAction == "Dashboard" ? "active" : "")"
+                                            asp-controller="Receptionist" asp-action="Dashboard">Receptionist Dashboard</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "ManageBookings" ? "active" : "")" asp-controller="Receptionist" asp-action="ManageBookings">Bookings</a>
+                                        <a class="nav-link @(currentAction == "ManageBookings" ? "active" : "")"
+                                            asp-controller="Receptionist" asp-action="ManageBookings">Bookings</a>
                                     </li>
-                                    
+
                                 }
                                 else if (User.IsInRole("Customer"))
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "Dashboard" ? "active" : "")" asp-controller="Customer" asp-action="Dashboard">Dashboard</a>
+                                        <a class="nav-link @(currentAction == "Dashboard" ? "active" : "")"
+                                            asp-controller="Customer" asp-action="Dashboard">Dashboard</a>
                                     </li>
-                                    
+
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "BookSession" ? "active" : "")" asp-controller="Customer" asp-action="BookSession">Book Session</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "Payments" ? "active" : "")" asp-controller="Customer" asp-action="Payments">Payments</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "Recharge" ? "active" : "")" asp-controller="Customer" asp-action="Recharge">Recharge</a>
+                                        <a class="nav-link @(currentAction == "BookSession" ? "active" : "")"
+                                            asp-controller="Customer" asp-action="BookSession">Book Session</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "Membership" ? "active" : "")" asp-controller="Customer" asp-action="Membership">Membership</a>
+                                        <a class="nav-link @(currentAction == "Payments" ? "active" : "")"
+                                            asp-controller="Customer" asp-action="Payments">Payments</a>
                                     </li>
-                                    
                                     <li class="nav-item">
-                                        <a class="nav-link @(currentAction == "TrainerList" ? "active" : "")" asp-controller="Customer" asp-action="TrainerList">Trainer List</a>
+                                        <a class="nav-link @(currentAction == "Recharge" ? "active" : "")"
+                                            asp-controller="Customer" asp-action="Recharge">Recharge</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(currentAction == "Membership" ? "active" : "")"
+                                            asp-controller="Customer" asp-action="Membership">Membership</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link @(currentAction == "TrainerList" ? "active" : "")"
+                                            asp-controller="Customer" asp-action="TrainerList">Trainer List</a>
                                     </li>
                                 }
                             }
                             <li class="nav-item">
-                                <a class="nav-link @(currentController == "Home" && currentAction == "Contact" ? "active" : "")" asp-controller="Home" asp-action="Contact">Contact</a>
+                                <a class="nav-link @(currentController == "Home" && currentAction == "Contact" ? "active" : "")"
+                                    asp-controller="Home" asp-action="Contact">Contact</a>
                             </li>
                         </ul>
                         <div class="d-flex align-items-center">
                             @if (isSignedIn)
                             {
-                                <a asp-controller="Account" asp-action="ViewProfile" 
-                                class="d-flex align-items-center text-white text-decoration-none mr-2" style="margin: 0.2rem;">
+                                <a asp-controller="Account" asp-action="ViewProfile"
+                                    class="d-flex align-items-center text-white text-decoration-none mr-2"
+                                    style="margin: 0.2rem;">
                                     <div class="position-relative mr-2">
                                         <img src="@Url.Content("~/uploads/profile/" + (user?.ProfileImageName ?? "default.png"))"
                                             class="rounded-circle mr-1" width="32" height="32" alt="Avatar" />
-                                        
+
                                         @if (isReceptionist)
                                         {
                                             <span id="availability-indicator"
                                                 class="position-absolute top-0 start-100 translate-middle p-1 border border-light rounded-circle"
-                                                style="background-color: @(((Receptionist)user).IsAvailable ? "#28a745" : "#6c757d"); width:12px; height:12px;">
+                                                style="background-color: @(((user as Receptionist)?.IsAvailable == true ? "#28a745" : "#6c757d")); width:12px; height:12px;">
                                             </span>
+
                                         }
                                     </div>
                                     <span>@user?.Name</span>
@@ -260,11 +277,13 @@
                             }
                             else
                             {
-                                <a class="btn btn-sm btn-outline-warning" asp-controller="Account" asp-action="Register" style="margin: 0.2rem;">Register</a>
-                                <a class="btn btn-sm btn-outline-light" asp-controller="Account" asp-action="Login" style="margin: 0.2rem;">Log In</a>
+                                <a class="btn btn-sm btn-outline-warning" asp-controller="Account" asp-action="Register"
+                                    style="margin: 0.2rem;">Register</a>
+                                <a class="btn btn-sm btn-outline-light" asp-controller="Account" asp-action="Login"
+                                    style="margin: 0.2rem;">Log In</a>
                             }
                             <a class="btn btn-sm btn-warning ms-2"
-                            href="@(User.IsInRole("Admin") ? Url.Action("Dashboard", "Admin", new { area = "Admin" }) : Url.Action("AccessDenied", "Account"))">
+                                href="@(User.IsInRole("Admin") ? Url.Action("Dashboard", "Admin", new { area = "Admin" }) : Url.Action("AccessDenied", "Account"))">
                                 <i class="fa fa-cogs"></i> Admin
                             </a>
 
@@ -383,18 +402,18 @@
                         "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]')?.value
                     }
                 })
-                .then(res => res.json())
-                .then(data => {
-                    btn.textContent = data.text;
-                    btn.className = "btn btn-sm " + data.css;
-                    btn.dataset.available = data.available;
+                    .then(res => res.json())
+                    .then(data => {
+                        btn.textContent = data.text;
+                        btn.className = "btn btn-sm " + data.css;
+                        btn.dataset.available = data.available;
 
-                    const dot = document.getElementById("availability-indicator");
-                    if (dot) dot.style.backgroundColor = data.available === "true" ? "#28a745" : "#6c757d";
-                });
+                        const dot = document.getElementById("availability-indicator");
+                        if (dot) dot.style.backgroundColor = data.available === "true" ? "#28a745" : "#6c757d";
+                    });
             });
         });
-        </script>
+    </script>
 
 
 
@@ -402,6 +421,3 @@
 </body>
 
 </html>
-
-
-
