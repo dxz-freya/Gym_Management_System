@@ -368,7 +368,7 @@
                 toast.find('.close').on('click', () => toast.fadeOut('fast', () => toast.remove()));
             }
 
-            $('#searchInput').on('input', function () {
+            $('#searchInput').on('keypress', function () {
                 const keyword = $(this).val();
                 $.get('/Admin/User/Search', { keyword: keyword }, function (data) {
                     $('#userTableBody').html(data);

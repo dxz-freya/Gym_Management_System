@@ -325,19 +325,30 @@ namespace GymManagement.Areas.Admin.Controllers
     }
 
     [HttpGet]
-    public async Task<IActionResult> Search(string keyword)
+    public async Task<IActionResult> Search(string keyword, int page = 1)
     {
-      var users = await _userService.GetUsersFilteredAsync(keyword);
-
-      foreach (var user in users)
+      const int PageSize = 10;
+      var allUsers = await _userService.GetUsersFilteredAsync(keyword);
+      var usersPage = allUsers
+          .OrderBy(u => u.UserName)
+          .Skip((page - 1) * PageSize)
+          .Take(PageSize)
+          .ToList();
+      foreach (var user in usersPage)
       {
         user.RoleNames = await userManager.GetRolesAsync(user);
       }
 
       var model = new UserViewModel
       {
-        Users = users,
-        Roles = await roleManager.Roles.ToListAsync()
+        Users = usersPage,
+        Roles = await roleManager.Roles.ToListAsync(),
+        PagingInfo = new PagingInfo
+        {
+          CurrentPage = page,
+          ItemsPerPage = PageSize,
+          TotalItems = allUsers.Count()
+        }
       };
 
       return PartialView("_UserTableBody", model);
